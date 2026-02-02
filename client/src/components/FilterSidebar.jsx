@@ -1,11 +1,25 @@
 import { Filter, X } from 'lucide-react'
 import React, { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
 
+    const navigate = useNavigate()
+
     const [searchParams, setSearchParams]=useSearchParams()
     const[search,setSearch]=useState(useSearchParams.get("search")||"")
+
+    const onChangeSearch =(e)=>{
+        if (e.target.value) {
+            setSearchParams({search: e.target.value})
+            setSearch(e.target.value)
+            
+        }else{
+            navigate(`/marketplace`)
+            setSearch("")
+
+        }
+    }
 
 
   return (
@@ -34,7 +48,7 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
         <div className='p-4 space-y-6 sm:max-h-[calc(100vh-200px)] overflow-y-scroll no-scrollbar'>
             {/* search bar */}
             <div className='flex items-center justify-between'>
-                <input type="text" placeholder="Search by username, platform, niche, etc." className='w-full text-sm px-3 py-2 border border-gray-300 rounded-md outline-indigo-500' />
+                <input type="text" placeholder="Search by username, platform, niche, etc." className='w-full text-sm px-3 py-2 border border-gray-300 rounded-md outline-indigo-500' onChange={onChangeSearch} value={search} />
 
 
             </div>
