@@ -13,10 +13,10 @@ const CTA = () => {
                 </div>
                 <h2 className="text-2xl md:text-4xl font-medium mt-2 leading-[1.2]">
                     Sell your Social Accounts <br />
-                    <span className="bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">Expert Guidance</span> 
-                    & Proven Results!
+                    <span className="bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">with Confidence</span> 
+                    & Earn Money
                 </h2>
-                <p className="text-slate-500 mt-2 max-w-lg max-md:text-sm">Achieve your goals faster with personalized strategies, hands-on support, and results that speak for themselves.</p>
+                <p className="text-slate-500 mt-2 max-w-lg max-md:text-sm">We are the leading social media marketplace that connects brands with their customers With our user-friendly interface</p>
                 <button type="button" className="bg-gradient-to-r from-purple-600 to-blue-500 text-white text-sm px-5 py-2.5 rounded-xl font-medium mt-4 hover:scale-105 active:scale-95 transition-all duration-300"> 
                     Get Started Today
                 </button>
