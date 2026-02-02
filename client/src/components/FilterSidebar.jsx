@@ -1,7 +1,11 @@
-import { Filter } from 'lucide-react'
-import React from 'react'
+import { Filter, X } from 'lucide-react'
+import React, { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
+
+    const [searchParams, setSearchParams]=useSearchParams()
+    const[search,setSearch]=useState(useSearchParams.get("search")||"")
 
 
   return (
@@ -16,8 +20,25 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
                 </div>
                 <div className='flex items-center gap-2'>
 
+                    <X className='size-6 text-gray-500 hover:text-gray-700 p-1 hover:bg-gray-100 rounded transition-colors cursor-pointer'/>
+                    
+                    <button onClick={()=>setShowFilterPhone(false)} className='sm:hidden text-sm border text-gray-700 px-3 py-1 rounded'>
+                        Apply
+                    </button>
+
+
                 </div>
             </div>
+        </div>
+
+        <div className='p-4 space-y-6 sm:max-h-[calc(100vh-200px)] overflow-y-scroll no-scrollbar'>
+            {/* search bar */}
+            <div className='flex items-center justify-between'>
+                <input type="text" placeholder="Search by username, platform, niche, etc." className='w-full text-sm px-3 py-2 border border-gray-300 rounded-md outline-indigo-500' />
+
+
+            </div>
+
         </div>
     </div>
   )
