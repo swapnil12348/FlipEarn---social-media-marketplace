@@ -14,6 +14,9 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
                     <Filter className='size-4'/>
                     <h3 className='font-semibold'>Filters</h3>
                 </div>
+                <div className='flex items-center gap-2'>
+
+                </div>
             </div>
         </div>
     </div>
