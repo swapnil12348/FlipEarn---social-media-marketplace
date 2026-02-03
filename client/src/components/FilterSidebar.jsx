@@ -1,4 +1,4 @@
-import { Filter, X } from 'lucide-react'
+import { ChevronDown, Filter, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -7,7 +7,7 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
     const navigate = useNavigate()
 
     const [searchParams, setSearchParams]=useSearchParams()
-    const[search,setSearch]=useState(useSearchParams.get("search")||"")
+    const[search,setSearch]=useState(searchParams.get("search")||"")
 
     const onChangeSearch =(e)=>{
         if (e.target.value) {
@@ -20,6 +20,32 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
 
         }
     }
+
+    const [expandedSections, setExpandedSections]=useState({
+        platform: true,
+        price: true,
+        followers: true,
+        niche: true,
+        status:true,
+    })
+
+    const toggleSection = (section)=>{
+        setExpandedSections((prev)=>({...prev, [section]: !prev[section]}))
+    }
+
+    const onFiltersChange = (newFilters) =>{
+        setFilters({...filters, ...newFilters})
+    }
+
+    const platforms = [
+        {value: "youtube", label: "YouTube"},
+        {value: "instagram", label: "Instagram"},
+        {value: "tiktok", label: "TikTok"},
+        {value: "facebook", label: "Facebook"},
+        {value: "twitter", label: "LinkedIn"},
+        {value: "twitch", label: "Twitch"},
+        {value: "discord", label: "Discord"},
+    ]
 
 
   return (
@@ -52,7 +78,38 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
 
 
             </div>
+            {/* platform filter */}
+            <div>
+                <button onClick={()=>toggleSection("platform")} className='flex items-center justify-between w-full mb-3'>
+                    <label>Platform</label>
+                    <ChevronDown className={`size-4 transition-transform ${expandedSections.platform ? "rotate-180" : ""}`}/>
 
+                </button>
+                {expandedSections.platform && (
+                    <div className='flex flex-col gap-2'>
+                        {
+                            platforms.map((platform)=>(
+                                <label key={platform.value} className='flex items-center gap-2 text-gray-700 text-sm'>
+                                    <input type="checkbox" checked={filters.platform?.includes(platform.value) || false } onChange={(e)=>{
+                                        const checked = e.target.checked;
+                                        const current = filters.platform || []
+                                        const updated = checked ? [...current, platform.value] : current.filter((p)=> p !== platform.value);
+
+                                        onFiltersChange({
+                                            ...filters,
+                                            platform: updated.length > 0 ? updated : null
+                                        })
+                                    }}/>
+                                    <span>{platform.label}</span>
+                                </label>
+                            ))
+                        }
+                    </div>
+                )}
+
+            </div>
+            {/* price range */}
+            
         </div>
     </div>
   )
