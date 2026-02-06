@@ -36,6 +36,7 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
     const onFiltersChange = (newFilters) =>{
         setFilters({...filters, ...newFilters})
     }
+    
 
     const platforms = [
         {value: "youtube", label: "YouTube"},
