@@ -111,7 +111,7 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
             </div>
             {/* price range */}
             <div>
-                <button onClick={()=>toggleSection("platform")} className='flex items-center justify-between w-full mb-3'>
+                <button onClick={()=>toggleSection("price")} className='flex items-center justify-between w-full mb-3'>
                     <label>Platform</label>
                     <ChevronDown className={`size-4 transition-transform ${expandedSections.platform ? "rotate-180" : ""}`}/>
 
