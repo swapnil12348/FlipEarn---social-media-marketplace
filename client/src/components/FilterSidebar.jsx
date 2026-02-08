@@ -110,6 +110,35 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
 
             </div>
             {/* price range */}
+            <div>
+                <button onClick={()=>toggleSection("platform")} className='flex items-center justify-between w-full mb-3'>
+                    <label>Platform</label>
+                    <ChevronDown className={`size-4 transition-transform ${expandedSections.platform ? "rotate-180" : ""}`}/>
+
+                </button>
+                {expandedSections.platform && (
+                    <div className='flex flex-col gap-2'>
+                        {
+                            platforms.map((platform)=>(
+                                <label key={platform.value} className='flex items-center gap-2 text-gray-700 text-sm'>
+                                    <input type="checkbox" checked={filters.platform?.includes(platform.value) || false } onChange={(e)=>{
+                                        const checked = e.target.checked;
+                                        const current = filters.platform || []
+                                        const updated = checked ? [...current, platform.value] : current.filter((p)=> p !== platform.value);
+
+                                        onFiltersChange({
+                                            ...filters,
+                                            platform: updated.length > 0 ? updated : null
+                                        })
+                                    }}/>
+                                    <span>{platform.label}</span>
+                                </label>
+                            ))
+                        }
+                    </div>
+                )}
+
+            </div>
             
         </div>
     </div>
