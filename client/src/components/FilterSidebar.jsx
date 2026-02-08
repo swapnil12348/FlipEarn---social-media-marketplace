@@ -82,7 +82,7 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
             {/* platform filter */}
             <div>
                 <button onClick={()=>toggleSection("platform")} className='flex items-center justify-between w-full mb-3'>
-                    <label>Platform</label>
+                    <label className='text-sm font-medium text-gray-800'>Platform</label>
                     <ChevronDown className={`size-4 transition-transform ${expandedSections.platform ? "rotate-180" : ""}`}/>
 
                 </button>
@@ -112,7 +112,7 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
             {/* price range */}
             <div>
                 <button onClick={()=>toggleSection("price")} className='flex items-center justify-between w-full mb-3'>
-                    <label>Platform</label>
+                    <label className='text-sm font-medium text-gray-800'>Price Range</label>
                     <ChevronDown className={`size-4 transition-transform ${expandedSections.platform ? "rotate-180" : ""}`}/>
 
                 </button>
