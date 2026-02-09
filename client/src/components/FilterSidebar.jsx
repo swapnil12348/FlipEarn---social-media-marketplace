@@ -113,28 +113,18 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
             <div>
                 <button onClick={()=>toggleSection("price")} className='flex items-center justify-between w-full mb-3'>
                     <label className='text-sm font-medium text-gray-800'>Price Range</label>
-                    <ChevronDown className={`size-4 transition-transform ${expandedSections.platform ? "rotate-180" : ""}`}/>
+                    <ChevronDown className={`size-4 transition-transform ${expandedSections.price ? "rotate-180" : ""}`}/>
 
                 </button>
-                {expandedSections.platform && (
-                    <div className='flex flex-col gap-2'>
-                        {
-                            platforms.map((platform)=>(
-                                <label key={platform.value} className='flex items-center gap-2 text-gray-700 text-sm'>
-                                    <input type="checkbox" checked={filters.platform?.includes(platform.value) || false } onChange={(e)=>{
-                                        const checked = e.target.checked;
-                                        const current = filters.platform || []
-                                        const updated = checked ? [...current, platform.value] : current.filter((p)=> p !== platform.value);
+                {expandedSections.price && (
+                    <div className='space-y-3'>
+                        <input type="range" min="0" max="100000" step="100" value={filters.maxPrice || 100000 } onChange={(e)=>onFiltersChange({...filters, maxPrice: parseInt(e.target.value)})} className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 '/>
+                        <div className='flex items-center justify-between text-sm text-gray-600'>
+                            <span>0</span>
+                            <span>{(filters.maxPrice || 100000).toLocaleString()}</span>
 
-                                        onFiltersChange({
-                                            ...filters,
-                                            platform: updated.length > 0 ? updated : null
-                                        })
-                                    }}/>
-                                    <span>{platform.label}</span>
-                                </label>
-                            ))
-                        }
+                        </div>
+                    
                     </div>
                 )}
 
