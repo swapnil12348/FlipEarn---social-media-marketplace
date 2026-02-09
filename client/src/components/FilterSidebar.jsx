@@ -2,7 +2,7 @@ import { ChevronDown, Filter, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters}) => {
+const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters}) => {
 
     const navigate = useNavigate()
 
