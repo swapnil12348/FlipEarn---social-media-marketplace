@@ -4,7 +4,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters}) => {
 
+    const currency = import.meta.env.VITE_CURRENCY || "$";
     const navigate = useNavigate()
+
 
     const [searchParams, setSearchParams]=useSearchParams()
     const[search,setSearch]=useState(searchParams.get("search")||"")
