@@ -165,8 +165,8 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
                 </button>
                 {expandedSections.niche && (
                     <select
-                    value={filters.minFollowers?.toString() || "0" }
-                    onChange={(e)=>onFiltersChange({...filters, niche: parseInt(e.target.value) || 0})}
+                    value={filters.niche || " " }
+                    onChange={(e)=>onFiltersChange({...filters, niche: e.target.value|| null})}
                     
                     className='w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 outline-indigo-500'>
                         <option value="0">Any Amount</option>
