@@ -122,8 +122,8 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
                     <div className='space-y-3'>
                         <input type="range" min="0" max="100000" step="100" value={filters.maxPrice || 100000 } onChange={(e)=>onFiltersChange({...filters, maxPrice: parseInt(e.target.value)})} className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 '/>
                         <div className='flex items-center justify-between text-sm text-gray-600'>
-                            <span>0</span>
-                            <span>{(filters.maxPrice || 100000).toLocaleString()}</span>
+                            <span>{currency}0</span>
+                            <span>{currency}{(filters.maxPrice || 100000).toLocaleString()}</span>
 
                         </div>
                     
@@ -131,6 +131,57 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
                 )}
 
             </div>
+            {/* followers range  */}
+            <div>
+                <button onClick={()=>toggleSection("followers")} className='flex items-center justify-between w-full mb-3'>
+                    <label className='text-sm font-medium text-gray-800'>Minimum Followers</label>
+                    <ChevronDown className={`size-4 transition-transform ${expandedSections.followers ? "rotate-180" : ""}`}/>
+
+                </button>
+                {expandedSections.followers && (
+                    <select
+                    value={filters.minFollowers?.toString() || "0" }
+                    onChange={(e)=>onFiltersChange({...filters, minFollowers: parseInt(e.target.value) || 0})}
+                    
+                    className='w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 outline-indigo-500'>
+                        <option value="0">Any Amount</option>
+                        <option value="1000">1K+</option>
+                        <option value="10000">10K+</option>
+                        <option value="50000">50K+</option>
+                        <option value="100000">100K+</option>
+                        <option value="500000">500K+</option>
+                        <option value="1000000">1M+</option>
+                    </select>
+                   
+                )}
+
+            </div>
+            {/* niche filter */}
+              <div>
+                <button onClick={()=>toggleSection("niche")} className='flex items-center justify-between w-full mb-3'>
+                    <label className='text-sm font-medium text-gray-800'>Minimum Followers</label>
+                    <ChevronDown className={`size-4 transition-transform ${expandedSections.niche ? "rotate-180" : ""}`}/>
+
+                </button>
+                {expandedSections.niche && (
+                    <select
+                    value={filters.minFollowers?.toString() || "0" }
+                    onChange={(e)=>onFiltersChange({...filters, niche: parseInt(e.target.value) || 0})}
+                    
+                    className='w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 outline-indigo-500'>
+                        <option value="0">Any Amount</option>
+                        <option value="1000">1K+</option>
+                        <option value="10000">10K+</option>
+                        <option value="50000">50K+</option>
+                        <option value="100000">100K+</option>
+                        <option value="500000">500K+</option>
+                        <option value="1000000">1M+</option>
+                    </select>
+                   
+                )}
+
+            </div>
+            
             
         </div>
     </div>
