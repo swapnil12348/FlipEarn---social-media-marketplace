@@ -17,8 +17,23 @@ const Marketplace = () => {
         verified: false,
         monetized: false,
     })
+
     const {listings} = useSelector(state => state.listing)
+
     const filteredListings = listings.filter((listing)=>{
+
+        if (filters.maxPrice) {
+            if (listing.price > filters.maxPrice) {
+                return false
+            }
+        }
+
+        if (filters.platform && filters.platform.length > 0) {
+            if (!filters.platform.includes(listing.platform)) {
+                return false
+            }
+        }
+
         return true
     })
 
