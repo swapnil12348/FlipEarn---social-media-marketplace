@@ -36,6 +36,22 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
     const onFiltersChange = (newFilters) =>{
         setFilters({...filters, ...newFilters})
     }
+
+    const onClearFilters = ()=>{
+        if (search) {
+            navigate("/marketplace")
+        }
+        setFilters({
+            platform:null,
+            maxPrice: 100000,
+            minFollowers: 0,
+            niche: null,
+            verified: false,
+            monetized: false,
+        })
+    }
+
+
     
     const platforms = [
         {value: "youtube", label: "YouTube"},
