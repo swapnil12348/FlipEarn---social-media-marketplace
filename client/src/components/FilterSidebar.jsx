@@ -198,26 +198,24 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
             </div>
             {/* verification status */}
                 <div>
-                <button onClick={()=>toggleSection("niche")} className='flex items-center justify-between w-full mb-3'>
-                    <label className='text-sm font-medium text-gray-800'>Niche</label>
-                    <ChevronDown className={`size-4 transition-transform ${expandedSections.niche ? "rotate-180" : ""}`}/>
+                <button onClick={()=>toggleSection("status")} className='flex items-center justify-between w-full mb-3'>
+                    <label className='text-sm font-medium text-gray-800'>Account Status</label>
+                    <ChevronDown className={`size-4 transition-transform ${expandedSections.status ? "rotate-180" : ""}`}/>
 
                 </button>
-                {expandedSections.niche && (
-                    <select
-                    value={filters.niche || " " }
-                    onChange={(e)=>onFiltersChange({...filters, niche: e.target.value|| null})}
-                    
-                    className='w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 outline-indigo-500'>
-                        <option value="0">All Niches</option>
-                        {niches.map((niche)=>(
-                            <option key={niche.value} value={niche.value}>
-                                {niche.label}
-                            </option>
+                {expandedSections.status && (
+                    <div className='space-y-3'>
+                        <label className='flex items-center space-x-2 cursor-pointer'>
+                            <input type="checkbox" checked={filters.verified || false} onChange={(e)=>onFiltersChange({...filters, verified: e.target.checked})} />
+                            <span className='text-sm text-gray-700'>Verified accounts only</span>
+                        </label>
+                        <label className='flex items-center space-x-2 cursor-pointer'>
+                            <input type="checkbox" checked={filters.monetized || false} onChange={(e)=>onFiltersChange({...filters, monetized: e.target.checked})} />
+                            <span className='text-sm text-gray-700'>Monetized accounts only</span>
+                        </label>
 
-                        ))}
-                        
-                    </select>
+                    </div>
+                    
                    
                 )}
 
