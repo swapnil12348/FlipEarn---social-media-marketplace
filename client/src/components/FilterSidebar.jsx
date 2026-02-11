@@ -6,8 +6,6 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
 
     const currency = import.meta.env.VITE_CURRENCY || "$";
     const navigate = useNavigate()
-
-
     const [searchParams, setSearchParams]=useSearchParams()
     const[search,setSearch]=useState(searchParams.get("search")||"")
 
@@ -39,7 +37,6 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
         setFilters({...filters, ...newFilters})
     }
     
-
     const platforms = [
         {value: "youtube", label: "YouTube"},
         {value: "instagram", label: "Instagram"},
@@ -50,9 +47,26 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
         {value: "discord", label: "Discord"},
     ]
 
+    const niches =[
+        {value:"lifestyle", label:"Lifestyle"},
+        {value:"fitness", label:"Fitness"},
+        {value:"food", label:"Food"},
+        {value:"travel", label:"Travel"},
+        {value:"tech", label:"Tech"},
+        {value:"gaming", label:"Gaming"},
+        {value:"fashion", label:"Fashion"},
+        {value:"beauty", label:"Beauty"},
+        {value:"business", label:"Business"},
+        {value:"education", label:"Education"},
+        {value:"entertainment", label:"Entertainment"},
+        {value:"music", label:"Music"},
+        {value:"art", label:"Art"},
+        {value:"sports", label:"Sports"},
+        {value:"health", label:"Health"},
+        {value:"finance", label:"Finance"},
+    ]
 
   return (
-
 
     <div className={`${showFilterPhone ? "max-sm:fixed" : "max-sm:hidden"} max-sm:inset-0 z-100 max-sm:h-screen max-sm:overflow-scroll bg-white rounded-lg shadow-sm border border-gray-200 h-fit sticky top-24 md:min-w-[300px]`}>
         <div className='p-4 border-b border-gray-200'>
@@ -159,7 +173,7 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
             {/* niche filter */}
               <div>
                 <button onClick={()=>toggleSection("niche")} className='flex items-center justify-between w-full mb-3'>
-                    <label className='text-sm font-medium text-gray-800'>Minimum Followers</label>
+                    <label className='text-sm font-medium text-gray-800'>Niche</label>
                     <ChevronDown className={`size-4 transition-transform ${expandedSections.niche ? "rotate-180" : ""}`}/>
 
                 </button>
@@ -169,20 +183,45 @@ const FilterSidebar = ({showFilterPhone, setShowFilterPhone, filters, setFilters
                     onChange={(e)=>onFiltersChange({...filters, niche: e.target.value|| null})}
                     
                     className='w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 outline-indigo-500'>
-                        <option value="0">Any Amount</option>
-                        <option value="1000">1K+</option>
-                        <option value="10000">10K+</option>
-                        <option value="50000">50K+</option>
-                        <option value="100000">100K+</option>
-                        <option value="500000">500K+</option>
-                        <option value="1000000">1M+</option>
+                        <option value="0">All Niches</option>
+                        {niches.map((niche)=>(
+                            <option key={niche.value} value={niche.value}>
+                                {niche.label}
+                            </option>
+
+                        ))}
+                        
                     </select>
                    
                 )}
 
             </div>
-            
-            
+            {/* verification status */}
+                <div>
+                <button onClick={()=>toggleSection("niche")} className='flex items-center justify-between w-full mb-3'>
+                    <label className='text-sm font-medium text-gray-800'>Niche</label>
+                    <ChevronDown className={`size-4 transition-transform ${expandedSections.niche ? "rotate-180" : ""}`}/>
+
+                </button>
+                {expandedSections.niche && (
+                    <select
+                    value={filters.niche || " " }
+                    onChange={(e)=>onFiltersChange({...filters, niche: e.target.value|| null})}
+                    
+                    className='w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 outline-indigo-500'>
+                        <option value="0">All Niches</option>
+                        {niches.map((niche)=>(
+                            <option key={niche.value} value={niche.value}>
+                                {niche.label}
+                            </option>
+
+                        ))}
+                        
+                    </select>
+                   
+                )}
+
+            </div>
         </div>
     </div>
   )
