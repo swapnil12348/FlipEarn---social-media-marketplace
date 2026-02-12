@@ -57,7 +57,7 @@ const Marketplace = () => {
             return false
         }
 
-        if (serach) {
+        if (search) {
             const trimed = search.trim()
             if (
                 !listing.title.toLowerCase().includes(trimed.toLowerCase()) &&
