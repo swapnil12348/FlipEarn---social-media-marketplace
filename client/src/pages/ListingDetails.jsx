@@ -32,6 +32,16 @@ const ListingDetails = () => {
       <button onClick={()=>navigate(-1)} className='flex items-center gap-2 text-slate-600 py-5'>
         <ArrowLeftIcon className='size-4'/> Go to Previous Page
       </button>
+      <div className='flex items-start max-md:flex-col gap-10'>
+        <div className='flex-1 max-md:w-full'>
+          {/* top section */}
+          <div className='bg-white rounded-xl border border-gray-200 p-6 mb-5'>
+
+          </div>
+        </div>
+        {/* seller info and purchase options */}
+        <div></div>
+      </div>
         
     </div>
   ) : (
