@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { getProfileLink } from '../assets/assets';
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { getProfileLink, platformIcons } from '../assets/assets';
 import { useSelector } from 'react-redux';
-import { ArrowLeftIcon, Loader2Icon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowUpRightFromSquareIcon, Loader2Icon } from 'lucide-react';
 
 const ListingDetails = () => {
 
@@ -36,6 +36,16 @@ const ListingDetails = () => {
         <div className='flex-1 max-md:w-full'>
           {/* top section */}
           <div className='bg-white rounded-xl border border-gray-200 p-6 mb-5'>
+            <div className='flex items-start gap-3'>
+              <div className='p-2 rounded-xl'>{platformIcons[listing.platform]}</div>
+              <div>
+                <h2>{listing.title}</h2>
+                <Link target='_blank' to={profileLink}>
+                <ArrowUpRightFromSquareIcon className='size-4 hover:text-indigo-500'/>
+
+                </Link>
+              </div>
+            </div>
 
           </div>
         </div>
