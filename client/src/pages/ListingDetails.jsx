@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getProfileLink } from '../assets/assets';
 import { useSelector } from 'react-redux';
-import { Loader2Icon } from 'lucide-react';
+import { ArrowLeftIcon, Loader2Icon } from 'lucide-react';
 
 const ListingDetails = () => {
 
@@ -29,6 +29,9 @@ const ListingDetails = () => {
 
   return listing ?  (
     <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-32'>
+      <button onClick={()=>navigate(-1)} className='flex items-center gap-2 text-slate-600 py-5'>
+        <ArrowLeftIcon className='size-4'/> Go to Previous Page
+      </button>
         
     </div>
   ) : (
