@@ -185,10 +185,18 @@ const ListingDetails = () => {
                 <p className='text-gray-500'>Niche</p>
                 <p className='font-medium capitalize'>{listing.niche}</p>
               </div>
-              
+
               <div>
                 <p className='text-gray-500'>Primary Country</p>
                 <p className='flex items-center font-medium'><MapPin className='size-4 mr-1 text-gray-400'/>{listing.country}</p>
+              </div>
+              <div>
+                <p className='text-gray-500'>Audience Age</p>
+                <p className='font-medium'>{listing.age_range}</p>
+              </div>
+              <div>
+                <p className=''></p>
+                <p></p>
               </div>
 
             </div>
