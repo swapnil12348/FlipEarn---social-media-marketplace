@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getProfileLink, platformIcons } from '../assets/assets';
 import { useSelector } from 'react-redux';
-import { ArrowLeftIcon, ArrowUpRightFromSquareIcon, CheckCircle2, ChevronLeftIcon, DollarSign, Loader2Icon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowUpRightFromSquareIcon, CheckCircle2, ChevronLeftIcon, ChevronRightIcon, DollarSign, Loader2Icon } from 'lucide-react';
 
 const ListingDetails = () => {
 
@@ -17,6 +17,10 @@ const ListingDetails = () => {
 
   const [current, setCurrent] = useState(0)
   const images = listing?.images || []
+
+  const prevSlide = ()=> setCurrent((prev)=>(prev === 0 ? images.length -1 : prev - 1))
+
+  const nextSlide = ()=> setCurrent((prev)=>(prev === images.length -1 ? 0 : prev + 1))
 
 
   useEffect(() => {
@@ -104,9 +108,19 @@ const ListingDetails = () => {
                 </div>
 
                 {/* navigation button */}
-                <button className='absolute left-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow'>
+                <button onClick={prevSlide} className='absolute left-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow'>
                   <ChevronLeftIcon className='w-5 h-5 text-gray-700'/>
                 </button>
+                <button onClick={nextSlide} className='absolute right-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow'>
+                  <ChevronRightIcon className='w-5 h-5 text-gray-700'/>
+                </button>
+
+                {/* dots indicator  */}
+                <div className='absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2'>
+                  {images.map((_, index)=>(
+                    <button onClick={()=>setCurrent(index)} key={index} className={`w-2.5 h-2.5 rounded-full ${current === index ? "bg-indigo-600" : "bg-gray-300"}`}/>
+                  ))}
+                </div>
               </div>
             </div>
           )}
