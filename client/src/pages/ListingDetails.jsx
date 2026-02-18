@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getProfileLink, platformIcons } from '../assets/assets';
 import { useSelector } from 'react-redux';
-import { ArrowLeftIcon, ArrowUpRightFromSquareIcon, CheckCircle2, ChevronLeftIcon, ChevronRightIcon, DollarSign, Loader2Icon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowUpRightFromSquareIcon, Calendar, CheckCircle2, ChevronLeftIcon, ChevronRightIcon, DollarSign, Eye, LineChart, Loader2Icon, MapPin, Users } from 'lucide-react';
 
 const ListingDetails = () => {
 
@@ -124,6 +124,78 @@ const ListingDetails = () => {
               </div>
             </div>
           )}
+
+          {/* account metrics  */}
+          <div className='bg-white rounded-xl border border-gray-200 mb-5'>
+            <div className='p-4 border-b border-gray-100'>
+              <h4 className='font-semibold text-gray-800'>Account Metrics</h4>
+            </div>
+            <div className='grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-center'>
+              <div>
+                <Users className='mx-auto text-gray-400 w-5 h-5 mb-1'/>
+                <p className='font-semibold text-gray-800'>
+                  {listing.followers_count?.toLocaleString()}
+                </p>
+                <p className='text-xs text-gray-500'>Followers</p>
+              </div>
+              <div>
+                <LineChart className='mx-auto text-gray-400 w-5 h-5 mb-1'/>
+                <p className='font-semibold text-gray-800'>
+                  {listing.engagement_rate}%
+                </p>
+                <p className='text-xs text-gray-500'>Enagagement</p>
+              </div>
+              <div>
+                <Eye className='mx-auto text-gray-400 w-5 h-5 mb-1'/>
+                <p className='font-semibold text-gray-800'>
+                  {listing.monthly_views?.toLocaleString()}
+                </p>
+                <p className='text-xs text-gray-500'>Monthly Views</p>
+              </div>
+               <div>
+                <Calendar className='mx-auto text-gray-400 w-5 h-5 mb-1'/>
+                <p className='font-semibold text-gray-800'>
+                  {new Date(listing.createdAt).toLocaleString()}
+                </p>
+                <p className='text-xs text-gray-500'>Listed</p>
+              </div>
+
+            </div>
+          </div>
+
+          {/* decription */}
+          <div className='bg-white rounded-xl border border-gray-200 mb-5'>
+            <div className='p-4 border-b border-gray-100'>
+              <h4 className='font font-semibold text-gray-800'>Description</h4>
+
+            </div>
+            <div className='p-4 text-sm text-gray-600'>{listing.description}</div>
+
+
+          </div>
+
+          {/* additional details  */}
+          <div className='bg-white rounded-xl border border-gray-200 mb-5'>
+            <div className='p-4 border-b border-gray-100'>
+              <h4 className='font-semibold text-gray-800'>Additional Details</h4>
+
+            </div>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 p-4 text-sm'>
+              <div>
+                <p className='text-gray-500'>Niche</p>
+                <p className='font-medium capitalize'>{listing.niche}</p>
+              </div>
+              
+              <div>
+                <p className='text-gray-500'>Primary Country</p>
+                <p className='flex items-center font-medium'><MapPin className='size-4 mr-1 text-gray-400'/>{listing.country}</p>
+              </div>
+
+            </div>
+
+          </div>
+
+
 
         </div>
         {/* seller info and purchase options */}
