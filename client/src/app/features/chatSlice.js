@@ -8,6 +8,20 @@ const chatSlice= createSlice({
         chatId: null,
     },
     reducers:{
-        setChat: (state, action)
+        setChat: (state, action)=>{
+            state.listing = action.payload.listing;
+            state.isOpen = true;
+            if (action.payload.chatId) {
+                state.chatId = action.payload.chatId
+                
+            }
+        },
+        clearChat: (state) =>{
+            state.listing = null;
+            state.isOpen = false;
+            state.chatId = null;
+        }
     }
 })
+
+export const {setChat, clearChat} = chatSlice.actions;
