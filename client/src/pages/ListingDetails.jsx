@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getProfileLink, platformIcons } from '../assets/assets';
 import { useSelector } from 'react-redux';
-import { ArrowLeftIcon, ArrowUpRightFromSquareIcon, Calendar, CheckCircle2, ChevronLeftIcon, ChevronRightIcon, DollarSign, Eye, LineChart, Loader2Icon, MapPin, Users } from 'lucide-react';
+import { ArrowLeftIcon, ArrowUpRightFromSquareIcon, Calendar, CheckCircle2, ChevronLeftIcon, ChevronRightIcon, DollarSign, Eye, LineChart, Loader2Icon, MapPin, MessageSquareMoreIcon, ShoppingBagIcon, Users } from 'lucide-react';
 
 const ListingDetails = () => {
 
@@ -21,6 +21,16 @@ const ListingDetails = () => {
   const prevSlide = ()=> setCurrent((prev)=>(prev === 0 ? images.length -1 : prev - 1))
 
   const nextSlide = ()=> setCurrent((prev)=>(prev === images.length -1 ? 0 : prev + 1))
+
+  const purchaseAccount = async () => {
+    
+  }
+
+  const loadChatbox = () =>{
+    
+  }
+
+
 
 
   useEffect(() => {
@@ -213,13 +223,38 @@ const ListingDetails = () => {
 
         </div>
         {/* seller info and purchase options */}
-        <div>
-          <h4>Seller Information</h4>
+        <div className='bg-white min-w-full md:min-w-[370px] rounded-xl border border-gray-200 p-5 max-md:mb-10'>
+          <h4 className='font-semibold text-gray-800 mb-4'>Seller Information</h4>
           <div className='flex items-center gap-3 mb-2'>
             <img src={listing.owner?.image} alt="seller image" className='size-10 rounded-full' />
-
+            <div>
+              <p className='font-medium text-gray-800'>{listing.owner?.name}</p>
+              <p className='text-sm text-gray-500'>{listing.owner?.email}</p>
+            </div>
           </div>
+          <div className='flex items-center justify-between text-sm text-gray-600 mb-4'>
+            <p>Member Since <span className='font-medium'>{new Date(listing.owner?.createdAt).toLocaleDateString()}</span></p>
+          </div>
+          <button onClick={loadChatbox} className='w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition text-sm font-medium flex items-center justify-center gap-2'>
+            <MessageSquareMoreIcon className='size-4'/> Chat
+
+          </button>
+          {listing.isCredentialChanged && (
+            <button onClick={purchaseAccount} className="w-full mt-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition text-sm font-medium flex items-center justify-center gap-2">
+              <ShoppingBagIcon className='size-4'/> Purchase
+
+            </button>
+          )}
         </div>
+      </div>
+
+      {/* footer */}
+      <div className='bg-white border-t border-gray-200 p-4 text-center mt-28'>
+        <p className='text-sm text-gray-500'>
+          ~ 2026 <span className='text-indigo-600'>FlipEarn</span>. All rights reserved.
+        </p>
+
+
       </div>
 
     </div>
