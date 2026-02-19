@@ -195,19 +195,31 @@ const ListingDetails = () => {
                 <p className='font-medium'>{listing.age_range}</p>
               </div>
               <div>
-                <p className=''></p>
-                <p></p>
+                <p className='text-gray-500'>Platform Verified</p> 
+                <p className='font-medium'>{listing.platformAssured ? "Yes" : "No"}</p>
               </div>
-
+              <div>
+                <p className='text-gray-500'>Monetization</p>
+                <p className='font-medium'>{listing.monetized ? "Enabled" : "Disabled"}</p>
+              </div>
+              <div>
+                <p className='text-gray-500'>Status</p>
+                <p className='font-medium capitalize'>{listing.status}</p>
+              </div>
             </div>
-
           </div>
 
 
 
         </div>
         {/* seller info and purchase options */}
-        <div></div>
+        <div>
+          <h4>Seller Information</h4>
+          <div className='flex items-center gap-3 mb-2'>
+            <img src={listing.owner?.image} alt="seller image" className='size-10 rounded-full' />
+
+          </div>
+        </div>
       </div>
 
     </div>
