@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { dummyChats } from '../assets/assets';
-import { X } from 'lucide-react';
+import { Loader2Icon, X } from 'lucide-react';
 import { clearChat } from '../app/features/chatSlice';
 
 const ChatBox = () => {
@@ -31,6 +31,18 @@ const ChatBox = () => {
 
     }, [listing])
 
+    useEffect(()=>{
+      if (!isOpen) {
+        setChat(null);
+        setMessages([]);
+        setIsLoading(true);
+        setNewMessage("");
+        setIsSending(false);
+        
+      }
+
+    },[])
+
     if(!isOpen || !listing) return null;
 
 
@@ -47,6 +59,37 @@ const ChatBox = () => {
           <button onClick={()=> dispatch(clearChat())} className='ml-4 p-1 hover:bg-white/20 hover:bg-opacity-20 rounded-lg transition-colors'>
           <X className="w-5 h-5"/>
           </button>
+        </div>
+
+        {/* messages area  */}
+        <div className='flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100'>
+          {isLoading ? (
+            <div className='flex items-center justify-center h-full'>
+              <Loader2Icon className='size-6 animate-spin text-indigo-600'/>
+
+            </div>
+          ) : messages.length === 0 ? (
+            <div className='flex items-center justify-center h-full'>
+              <div className='text-center'>
+                <p className='text-gray-500 mb-2'>No messages yet</p>
+                <p className='text-sm text-gray-400'>Start the conversation</p>
+
+              </div>
+
+            </div>
+          ):(
+            messages.map((message)=>(
+              <div key={message.id} className={`flex ${message.sender_id === user.id ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[70%] rounded-lg p-3 pb-1 ${message.sender_id === user.id ? "bg-indigo-600 text-white"  : "bg-white border border-gray-200 text-gray-800"}`}>
+                  <p className='text-sm break-words whitespace-pre-wrap'>{message.message}</p>
+                  <p className={`text-[10px] mt-1 ${message.sender_id === user.id ? "text-indigo-200" : "text-gray-400"}`}>{new Date(message.createdAt)}</p>
+
+                </div>
+
+              </div>
+            ))
+          )}
+
         </div>
       </div>
     </div>
