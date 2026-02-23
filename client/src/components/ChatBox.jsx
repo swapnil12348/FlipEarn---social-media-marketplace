@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { dummyChats } from '../assets/assets';
 import { Loader2Icon, Send, X } from 'lucide-react';
 import { clearChat } from '../app/features/chatSlice';
-import {format} from 'date-fns';
+import { format } from 'date-fns';
 
 const ChatBox = () => {
 
@@ -52,7 +52,14 @@ const ChatBox = () => {
       messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
     }, [messages.length])
 
-    const handleSendMessage =async (params) => {
+    const handleSendMessage =async (e) => {
+      e.preventDefault();
+      if (!newMessage.trim() || isSending) {
+        return;
+      }
+
+      setMessages([...messages, {id: Date.now(), chatId: chat.id, sender_id: user.id, message: newMessage, createdAt: new Date()}]);
+      setNewMessage("");
       
     }
 
