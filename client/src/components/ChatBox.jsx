@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { dummyChats } from '../assets/assets';
 import { Loader2Icon, X } from 'lucide-react';
@@ -11,6 +11,7 @@ const ChatBox = () => {
     const dispatch = useDispatch();
 
     const user = {id: 'user_2'};
+    
 
     const [chat, setChat] = useState(null);
     const [messages, setMessages] = useState([]);
@@ -42,7 +43,12 @@ const ChatBox = () => {
         
       }
 
-    },[])
+    },[isOpen])
+
+    const messagesEndRef = useRef(null);
+    useEffect(()=>{
+      messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
+    }, [messages.length])
 
     if(!isOpen || !listing) return null;
 
