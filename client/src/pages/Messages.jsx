@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { dummyChats } from '../assets/assets';
+import { Search } from 'lucide-react';
 
 const Messages = () => {
 
@@ -27,7 +28,20 @@ const Messages = () => {
 
   return (
     <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-32'>
-      <div className=''>
+      <div className='py-10'>
+        {/* header */}
+        <div className='mb-8'>
+          <h1 className='text-3xl font-bold text-gray-800 mb-2'>Messages</h1>
+          <p className='text-gray-600'>Chat with buyers and sellers</p>
+
+        </div>
+
+        {/* search */}
+        <div>
+          <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5'/>
+          <input type="text" placeholder='Search conversations' value={searchQuery} />
+        </div>
+
 
       </div>
     </div>
