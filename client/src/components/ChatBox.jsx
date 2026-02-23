@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { dummyChats } from '../assets/assets';
 import { Loader2Icon, X } from 'lucide-react';
 import { clearChat } from '../app/features/chatSlice';
+import {format} from 'date-fns';
 
 const ChatBox = () => {
 
@@ -82,13 +83,14 @@ const ChatBox = () => {
               <div key={message.id} className={`flex ${message.sender_id === user.id ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[70%] rounded-lg p-3 pb-1 ${message.sender_id === user.id ? "bg-indigo-600 text-white"  : "bg-white border border-gray-200 text-gray-800"}`}>
                   <p className='text-sm break-words whitespace-pre-wrap'>{message.message}</p>
-                  <p className={`text-[10px] mt-1 ${message.sender_id === user.id ? "text-indigo-200" : "text-gray-400"}`}>{new Date(message.createdAt)}</p>
+                  <p className={`text-[10px] mt-1 ${message.sender_id === user.id ? "text-indigo-200" : "text-gray-400"}`}>{ format(new Date(message.createdAt), "MMM dd 'at' h:mm a")}</p>
 
                 </div>
 
               </div>
             ))
           )}
+          <div ref={messagesEndRef}/>
 
         </div>
       </div>
