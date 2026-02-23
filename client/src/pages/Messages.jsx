@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { dummyChats } from '../assets/assets';
-import { Search } from 'lucide-react';
+import { MessageCircle, Search } from 'lucide-react';
 
 const Messages = () => {
 
@@ -37,10 +37,36 @@ const Messages = () => {
         </div>
 
         {/* search */}
-        <div>
+        <div className='relative max-w-xl mb-8'>
           <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5'/>
-          <input type="text" placeholder='Search conversations' value={searchQuery} />
+          <input type="text" placeholder='Search conversations' value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-indigo-500'/>
         </div>
+
+        {/* chat list */}
+        {
+          loading ? (
+            <div className='text-center text-gray-500 py-20'>
+              Loading Messages...
+            </div>
+          )
+          :
+          (
+            chats.length === 0 ? (
+              <div className='bg-white rounded-lg shadow-xs border border-gray-200 p-16 text-center'>
+                <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4'>
+                  <MessageCircle className='w-8 h-8 text-gray-400'/>
+                </div>
+
+              </div>
+            ) 
+            :
+            (
+              <div>
+
+              </div>
+            )
+          )
+        }
 
 
       </div>
