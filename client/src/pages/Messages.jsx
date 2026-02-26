@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { dummyChats } from '../assets/assets';
 import { MessageCircle, Search } from 'lucide-react';
+import {format, isToday, isYesterday, parseISO} from 'date-fns'
 
 const Messages = () => {
 
@@ -9,6 +10,32 @@ const Messages = () => {
   const [chats, setChats]= useState([])
   const [searchQuery, setSearchQuery]=useState ('')
   const [loading, setLoading]=useState(true)
+
+  const formatTime = (dateString) =>{
+    if (!dateString) {
+      return
+    }
+
+    const date = parseISO(dateString)
+
+    if (isToday(date)) {
+      return 'Today' + format(date, "HH:mm");
+    }
+
+    if (isYesterday(date)) {
+      return 'Yesterday' + format(date, "HH:mm");
+    }
+    return format(date, "MMM d")
+  }
+
+  const filteredChats = useMemo(()=>{
+    const query = searchQuery.toLowerCase();
+    return chats.filter((chat)=>{
+      const chatUser = chat.chatUserId == user?.id ? chat?.ownerUser : chat?.chatUser;
+
+      return chat.listing?.title?.toLowerCase().includes(query) || chatUser?.name?.toLowerCase().includes(query);
+    })
+  },[chats, searchQuery])
 
   const fetchUserChats = async () => {
     setChats(dummyChats)
@@ -51,7 +78,7 @@ const Messages = () => {
           )
           :
           (
-            chats.length === 0 ? (
+            filteredChats.length === 0 ? (
               <div className='bg-white rounded-lg shadow-xs border border-gray-200 p-16 text-center'>
                 <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4'>
                   <MessageCircle className='w-8 h-8 text-gray-400'/>
@@ -82,7 +109,7 @@ const Messages = () => {
                             <h3 className='font-semibold text-gray-800 truncate'>
                               {chat.listing?.title}
                             </h3>
-                            <span className='text-xs text-gray-500 flex-shrink-0 ml-2'>{chat.updatedAt}</span>
+                            <span className='text-xs text-gray-500 flex-shrink-0 ml-2'>{formatTime(chat.updatedAt)}</span>
                           </div>
                           <p className='text-sm text-gray-600 truncate mb-1'>{chatUser?.name}</p>
                           <p className={`text-sm truncate ${!chat.isLastMessageRead && chat.lastMessageSenderId !== user?.id ? 'text-indigo-600 font-medium' : "text-gray-500"}`}>{chat.lastMessage || 'No messages yet'}</p>
