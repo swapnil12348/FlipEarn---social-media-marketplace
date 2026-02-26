@@ -56,6 +56,12 @@ const Messages = () => {
                 <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4'>
                   <MessageCircle className='w-8 h-8 text-gray-400'/>
                 </div>
+                <h3 className='text-xl font-medium text-gray-800 mb-2'>
+                  {searchQuery ? "No chats found" : "No messages yet"}
+                </h3>
+                <p className='text-gray-600'>
+                  {searchQuery ? "Try a different search term" : 'Start a conversation by viewing a listing and clicking "Chat with seller"'}
+                </p>
 
               </div>
             ) 
