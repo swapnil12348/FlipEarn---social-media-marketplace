@@ -2,8 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { dummyChats } from '../assets/assets';
 import { MessageCircle, Search } from 'lucide-react';
 import {format, isToday, isYesterday, parseISO} from 'date-fns'
+import {useDispatch} from 'react-redux'
+import { setChat } from '../app/features/chatSlice';
 
 const Messages = () => {
+
+  const dispatch = useDispatch()
 
   const user = {id: "user_1"};
 
@@ -36,6 +40,14 @@ const Messages = () => {
       return chat.listing?.title?.toLowerCase().includes(query) || chatUser?.name?.toLowerCase().includes(query);
     })
   },[chats, searchQuery])
+
+  const handleOpenChat = (chat)=>{
+    dispatch(setChat({
+      listing: chat.listing,
+      chatId: chat.id
+    }))
+
+  }
 
   const fetchUserChats = async () => {
     setChats(dummyChats)
@@ -95,7 +107,7 @@ const Messages = () => {
             :
             (
               <div className='bg-white rounded-lg shadow-xs border border-gray-200 divide-y divide-gray-200'>
-                {chats.map((chat)=>{
+                {filteredChats.map((chat)=>{
                   const chatUser = chat.chatUserId === user?.id ? chat.ownerUser : chat.chatUser;
 
                   return(
