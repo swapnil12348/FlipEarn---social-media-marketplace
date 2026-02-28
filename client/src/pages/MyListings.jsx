@@ -1,7 +1,8 @@
-import { Plus } from 'lucide-react';
+import { Eye, Plus } from 'lucide-react';
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
+import StatCard from '../components/StatCard';
 
 const MyListings = () => {
   const {userListings, balance} = useSelector((state)=>state.listing)
@@ -28,7 +29,7 @@ const MyListings = () => {
       </div>
       {/* stats */}
       <div>
-        
+        <StatCard title='Total Listings' value={userListings.length} icon={<Eye className='size-6 text-indigo-600' color='indigo'/>}/>
       </div>
     </div>
   )
