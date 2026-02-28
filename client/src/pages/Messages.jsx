@@ -35,7 +35,7 @@ const Messages = () => {
   const filteredChats = useMemo(()=>{
     const query = searchQuery.toLowerCase();
     return chats.filter((chat)=>{
-      const chatUser = chat.chatUserId == user?.id ? chat?.ownerUser : chat?.chatUser;
+      const chatUser = chat.chatUserId === user?.id ? chat?.ownerUser : chat?.chatUser;
 
       return chat.listing?.title?.toLowerCase().includes(query) || chatUser?.name?.toLowerCase().includes(query);
     })
@@ -111,7 +111,7 @@ const Messages = () => {
                   const chatUser = chat.chatUserId === user?.id ? chat.ownerUser : chat.chatUser;
 
                   return(
-                    <button key={chat.id} className='w-full p-4 hover:bg-gray-50 transition-colors text-left'>
+                    <button onClick={()=>handleOpenChat(chat)} key={chat.id} className='w-full p-4 hover:bg-gray-50 transition-colors text-left'>
                       <div className='flex items-start space-x-4'>
                         <div className='flex-shrink-0'>
                           <img src={chatUser?.image} alt={chat?.chatUser?.name} className='w-12 h-12 rounded-lg object-cover' />
