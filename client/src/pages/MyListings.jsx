@@ -1,4 +1,4 @@
-import { Eye, Plus } from 'lucide-react';
+import { CheckCircle, DollarSign, Eye, Plus, TrendingUp } from 'lucide-react';
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ const MyListings = () => {
   const currency = import.meta.env.VITE_CURRENCY || '$';
   const navigate = useNavigate()
 
-  const totalValue = userListings.reduce((sum, listing)=>sum + (listing || 0), 0);
+  const totalValue = userListings.reduce((sum, listing)=>sum + (listing.price || 0), 0);
   const activeListings = userListings.filter((listing)=>listing.status === 'active').length;
   const soldListings= userListings.filter((listing)=>listing.status === 'sold').length;
 
@@ -28,8 +28,11 @@ const MyListings = () => {
         </button>
       </div>
       {/* stats */}
-      <div>
-        <StatCard title='Total Listings' value={userListings.length} icon={<Eye className='size-6 text-indigo-600' color='indigo'/>}/>
+      <div className='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
+        <StatCard title='Total Listings' value={userListings.length} icon={<Eye className='size-6 text-indigo-600' />}color='indigo'/>
+        <StatCard title='Active Listings' value={activeListings} icon={<CheckCircle className='size-6 text-green-600' />}color='green'/>
+        <StatCard title='Sold' value={soldListings} icon={<TrendingUp className='size-6 text-indigo-600'/>} color='indigo'/>
+        <StatCard title='Total Value' value={`${currency}${totalValue.toLocaleString()}`} icon={<DollarSign className='size-6 text-yellow-600' />}color='yellow'/>
       </div>
     </div>
   )
