@@ -14,6 +14,12 @@ const MyListings = () => {
   const activeListings = userListings.filter((listing)=>listing.status === 'active').length;
   const soldListings= userListings.filter((listing)=>listing.status === 'sold').length;
 
+  const formatNumber = (num)=>{
+    if(num >= 1000000) return (num/1000000).toFixed(1) + "M";
+    if(num >= 1000) return (num/1000).toFixed(1) + "K";
+    return num?.toString() || "0"
+  }
+
 
   return (
     <div className='px-6 md:px-16 lg:px-24 xl:px-32 pt-8'>
@@ -139,8 +145,11 @@ const MyListings = () => {
                 <div className='grid grid-cols-2 gap-2 text-sm'>
                   <div className='flex items-center space-x-2'>
                     <Users className='size-4 text-gray-400'/>
-                    <span>{listing.followers_count} followers</span>
+                    <span>{formatNumber(listing.followers_count)} followers</span>
                   </div>
+                  <span>
+                    {`icon`}{" "}<span>{listing.status}</span>
+                  </span>
                 </div>
               </div>
             </div>
