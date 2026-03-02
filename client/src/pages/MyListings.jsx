@@ -147,7 +147,6 @@ const MyListings = () => {
                                     <button className='flex items-center gap-2 text-nowrap'>
                                       Add Credentials
                                       <hr className='border-gray-200 my-2' />
-
                                     </button>
                                   </>
                                 )}
@@ -175,15 +174,9 @@ const MyListings = () => {
                                         "Not Submitted"
                                     }
                                   </span>
-
                                 </button>
-
-
                               </div>
-
                             </div>
-
-
                           </div>
                           {listing.status == "active" && (
                             <StarIcon onClick={()=>markAsFeatured(listing.id)} size={18} className={`text-yellow-500 cursor-pointer ${listing.featured && "fill-yellow-500"}`} />
@@ -194,7 +187,6 @@ const MyListings = () => {
                       <p className='text-sm text-gray-600'><span>@{listing.username}</span></p>
                     </div>
                   </div>
-
                   <div className='space-y-4'>
                     <div className='grid grid-cols-2 gap-2 text-sm'>
                       <div className='flex items-center space-x-2'>
@@ -227,24 +219,19 @@ const MyListings = () => {
                           {listing.status == "active" && (<EyeOffIcon className='size-4'/>)}
                           {listing.status !== "active" && (<EyeIcon className='size-4'/>)}
                         </button>
-
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
-
           </div>
         )}
         <div className='bg-white border-t border-gray-200 p-4 text-center mt-28'>
         <p className='text-sm text-gray-500'>
           ~ 2026 <span className='text-indigo-600'>FlipEarn</span>. All rights reserved.
         </p>
-
-
       </div>
-
     </div>
   )
 }
