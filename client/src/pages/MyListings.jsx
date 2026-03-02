@@ -1,4 +1,4 @@
-import { ArrowDownCircleIcon, CheckCircle, CoinsIcon, DollarSign, Eye, LockIcon, Plus, StarIcon, TrendingUp, WalletIcon } from 'lucide-react';
+import { ArrowDownCircleIcon, CheckCircle, CoinsIcon, DollarSign, Eye, LockIcon, Plus, StarIcon, TrendingUp, Users, WalletIcon } from 'lucide-react';
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -93,7 +93,12 @@ const MyListings = () => {
                             )}
                             <button className='text-nowrap'>
                               Status :{" "}
-                              <span>
+                              <span className={
+                                listing.isCredentialSubmitted
+                                ? listing.isCredentialVerified
+                                ? listing.isCredentialChanged
+                                ? "text-green-600" : "text-indigo-600" : "text-slate-600" : "text-red-600"
+                              }>
                                 {
                                   listing.isCredentialSubmitted 
                                   ?
@@ -125,16 +130,20 @@ const MyListings = () => {
                       )}
 
                     </div>
-
                   </div>
                   <p className='text-sm text-gray-600'><span>@{listing.username}</span></p>
-
                 </div>
-
               </div>
 
+              <div className='space-y-4'>
+                <div className='grid grid-cols-2 gap-2 text-sm'>
+                  <div className='flex items-center space-x-2'>
+                    <Users className='size-4 text-gray-400'/>
+                    <span>{listing.followers_count} followers</span>
+                  </div>
+                </div>
+              </div>
             </div>
-
           </div>
         ))}
 
