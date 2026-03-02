@@ -91,6 +91,27 @@ const MyListings = () => {
                               </button>
                               </>
                             )}
+                            <button className='text-nowrap'>
+                              Status :{" "}
+                              <span>
+                                {
+                                  listing.isCredentialSubmitted 
+                                  ?
+                                  listing.isCredentialVerified
+                                  ?
+                                  listing.isCredentialChanged
+                                  ?
+                                  "Changed"
+                                  :
+                                  "Verified"
+                                  :
+                                  "Submitted"
+                                  :
+                                  "Not Submitted"
+                                }
+                              </span>
+
+                            </button>
 
 
                           </div>
