@@ -1,5 +1,5 @@
 import { ArrowDownCircleIcon, BanIcon, CheckCircle, Clock, CoinsIcon, DollarSign, Edit, Eye, EyeIcon, EyeOffIcon, LockIcon, Plus, StarIcon, TrashIcon, TrendingUp, Users, WalletIcon, XCircle } from 'lucide-react';
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import StatCard from '../components/StatCard';
@@ -9,6 +9,9 @@ const MyListings = () => {
   const { userListings, balance } = useSelector((state) => state.listing)
   const currency = import.meta.env.VITE_CURRENCY || '$';
   const navigate = useNavigate()
+
+  const [showCredentialSubmission, setShowCredentialSubmission] = useState(null)
+  const [showWithdrawal, setShowWithdrawal] = useState(null)
 
   const totalValue = userListings.reduce((sum, listing) => sum + (listing.price || 0), 0);
   const activeListings = userListings.filter((listing) => listing.status === 'active').length;
