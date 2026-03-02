@@ -1,4 +1,4 @@
-import { ArrowDownCircleIcon, CheckCircle, CoinsIcon, DollarSign, Eye, LockIcon, Plus, StarIcon, TrendingUp, Users, WalletIcon } from 'lucide-react';
+import { ArrowDownCircleIcon, BanIcon, CheckCircle, Clock, CoinsIcon, DollarSign, Eye, LockIcon, Plus, StarIcon, TrendingUp, Users, WalletIcon, XCircle } from 'lucide-react';
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,26 @@ const MyListings = () => {
     if(num >= 1000000) return (num/1000000).toFixed(1) + "M";
     if(num >= 1000) return (num/1000).toFixed(1) + "K";
     return num?.toString() || "0"
+  }
+
+  const getStatusIcon = (status)=>{
+    switch (status) {
+
+      case "active":
+        return <CheckCircle className='size-3.5'/>;
+      
+      case "ban":
+        return <BanIcon className='size-3.5'/>;
+      
+      case "sold":
+        return <DollarSign className='size-3.5'/>
+      
+      case "inactive":
+        return <XCircle className='size-3.5'/>
+        
+      default:
+        return <Clock className='size-3.5'/>
+    }
   }
 
 
