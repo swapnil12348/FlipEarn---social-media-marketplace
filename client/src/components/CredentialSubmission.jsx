@@ -57,8 +57,8 @@ const CredentialSubmission = ({onClose, listing}) => {
                 </div>
 
                 {/* submit button */}
-                <button type='submit' className='bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 mt-4 rounded-md'>
-
+                <button type="submit" className='bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 mt-4 rounded-md'>
+                    Submit
                 </button>
             </form>
         </div>
