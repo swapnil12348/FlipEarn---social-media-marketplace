@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -39,7 +40,14 @@ const ManageListing = () => {
 
    const handleInputChange = (field, value)=>{
     setFormData((prev) => ({...prev, [field]: value}))
+   }
 
+   const handleImageUpload = async (event) =>{
+    const files = Array.from(event.target.files);
+    if(!files.length) return;
+    if(files.length + formData.images.length > 5) return toast.error("You can add up to 5 images")
+
+      setFormData((prev) =>({...prev, images:[...prev.images, ...files]}))
    }
 
 
