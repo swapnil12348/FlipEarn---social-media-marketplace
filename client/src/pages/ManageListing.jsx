@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -47,8 +47,19 @@ const ManageListing = () => {
     if(!files.length) return;
     if(files.length + formData.images.length > 5) return toast.error("You can add up to 5 images")
 
-      setFormData((prev) =>({...prev, images:[...prev.images, ...files]}))
+      setFormData((prev) =>({...prev, images: [...prev.images, ...files] }))
    }
+
+   const removeImage = (indexToRemove) =>{
+    setFormData((prev)=>({
+      ...preview, images: prev.images.filter((_,i)=> i !== indexToRemove)
+    })) 
+  }
+
+  // get lisitng data for edit if 'id' is provided (edit node)
+  useEffect(()=>{
+    
+  },[id])
 
 
   return (
