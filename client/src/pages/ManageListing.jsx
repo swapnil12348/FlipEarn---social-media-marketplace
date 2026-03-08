@@ -62,7 +62,14 @@ const ManageListing = () => {
 
     setIsEditing(true)
     setLoadingListing(true)
-    
+    const listing = userListings.find((listing)=>listing.id === id)
+    if(listing){
+      setFormData(listing)
+      setLoadingListing(false)
+    }else{
+      toast.error("Listing not found")
+    }
+
   },[id])
 
 
