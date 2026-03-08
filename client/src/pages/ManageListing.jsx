@@ -58,6 +58,10 @@ const ManageListing = () => {
 
   // get lisitng data for edit if 'id' is provided (edit node)
   useEffect(()=>{
+    if(!id) return;
+
+    setIsEditing(true)
+    setLoadingListing(true)
     
   },[id])
 
