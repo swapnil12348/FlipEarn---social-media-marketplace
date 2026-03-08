@@ -1,3 +1,4 @@
+import { Loader2Icon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
@@ -68,14 +69,41 @@ const ManageListing = () => {
       setLoadingListing(false)
     }else{
       toast.error("Listing not found")
+      navigate("/my-listings")
     }
-
   },[id])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    
+  };
+
+  if (loadingListing) {
+    return(
+      <div className='h-screen flex items-center justify-center'>
+        <Loader2Icon className='size-7 animate-spin text-indigo-600'/>
+
+      </div>
+    )
+    
+  }
 
 
   return (
-    <div>
-        <h1>ManageListing page</h1>
+    <div className='min-h-screen py-8'>
+      <div className='mb-8'>
+        <h1 className='text-3xl font-bold text-gray-800'>
+          {isEditing ? "Edit Listing" : "List Your Account"}
+          <p className='text-gray-600 mt-2'>
+            {isEditing ? 'Update your existing account listing' : 'Create a mock listing to display your account info'}
+
+          </p>
+
+        </h1>
+
+      </div>
+        
     </div>
   )
 }
