@@ -95,12 +95,13 @@ const ManageListing = () => {
       <div className='mb-8'>
         <h1 className='text-3xl font-bold text-gray-800'>
           {isEditing ? "Edit Listing" : "List Your Account"}
+        </h1>
           <p className='text-gray-600 mt-2'>
             {isEditing ? 'Update your existing account listing' : 'Create a mock listing to display your account info'}
 
           </p>
 
-        </h1>
+        
 
       </div>
         
