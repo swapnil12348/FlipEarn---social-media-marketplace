@@ -109,7 +109,16 @@ const ManageListing = () => {
               <SelectField label='Platform *' options={platforms} value={formData.platform} onChange={(v) => handleInputChange('platform', v)} required={true}/>
               <InputField label='Listing Username/handle' value={formData.username} placeholder='@username' onChange={(v) => handleInputChange('username', v)} required={true}/>
               <SelectField label='Niche/Category *' options={niches} value={formData.niche} onChange={(v) => handleInputChange('niche', v)} required={true}/>
+            </div>
 
+          </Section>
+
+          {/* metrics */}
+
+          <Section title='Account Metrics'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
+              <InputField label='Followers count *' type='number' min={0} value={formData.followers_count} placeholder='10000' onChange={(v)=>handleInputChange('followers_count', v)} required={true}/>
+              <InputField label='Engagement Rate (%) ' type='number' min={0} max={100} value={formData.engagement_rate} placeholder='4' onChange={(v)=>handleInputChange('engagement_rate', v)} />
 
             </div>
 
