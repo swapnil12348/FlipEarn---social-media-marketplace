@@ -106,6 +106,9 @@ const ManageListing = () => {
           <Section title='Basic Information'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               <InputField label='Listing Title *' value={formData.title} placeholder='e.g., Premium Travel Instagram Account' onChange={(v) => handleInputChange('title', v)} required={true}/>
+              <SelectField label='Platform *' options={platforms} value={formData.platform} onChange={(v) => handleInputChange('platform', v)} required={true}/>
+              <InputField label='Listing Username/handle' value={formData.username} placeholder='@username' onChange={(v) => handleInputChange('username', v)} required={true}/>
+              <SelectField label='Platform *' options={platforms} value={formData.platform} onChange={(v) => handleInputChange('platform', v)} required={true}/>
 
 
             </div>
@@ -134,6 +137,19 @@ const InputField = ({label, value, onChange, placeholder, type = 'text', require
   <div>
     <label className='block text-sm font-medium text-gray-700 mb-2'>{label}</label>
     <input type={type} min={min} max={max} placeholder={placeholder} value={value} onChange={(e)=>onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300' required={required} />
+  </div>
+)
+
+const SelectField = ({label, options, value, onChange, required = false}) =>(
+  <div>
+    <label className='block text-sm font-medium text-gray-700 mb-2'>{label}</label>
+    <select value={value} onChange={(e)=>onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300' required={required}>
+      <option value=''>Select...</option>
+      {options.map((opt)=>(
+        <option key={opt} value={opt}>{opt}</option>
+      ))}
+    </select>
+
   </div>
 )
 
