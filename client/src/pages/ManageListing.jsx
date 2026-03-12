@@ -108,7 +108,7 @@ const ManageListing = () => {
               <InputField label='Listing Title *' value={formData.title} placeholder='e.g., Premium Travel Instagram Account' onChange={(v) => handleInputChange('title', v)} required={true}/>
               <SelectField label='Platform *' options={platforms} value={formData.platform} onChange={(v) => handleInputChange('platform', v)} required={true}/>
               <InputField label='Listing Username/handle' value={formData.username} placeholder='@username' onChange={(v) => handleInputChange('username', v)} required={true}/>
-              <SelectField label='Platform *' options={platforms} value={formData.platform} onChange={(v) => handleInputChange('platform', v)} required={true}/>
+              <SelectField label='Niche/Category *' options={niches} value={formData.niche} onChange={(v) => handleInputChange('niche', v)} required={true}/>
 
 
             </div>
