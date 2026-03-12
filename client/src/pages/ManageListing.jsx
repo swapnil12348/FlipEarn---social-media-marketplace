@@ -101,7 +101,16 @@ const ManageListing = () => {
             {isEditing ? 'Update your existing account listing' : 'Create a mock listing to display your account info'}
           </p>
         </div>
-        <form onSubmit={}>
+        <form onSubmit={handleSubmit} className='space-y-8'>
+          {/* basic info */}
+          <Section title='Basic Information'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <InputField label='Listing Title *' value={formData.title} placeholder='e.g., Premium Travel Instagram Account' onChange={(v) => handleInputChange('title', v)} required={true}/>
+
+
+            </div>
+
+          </Section>
 
           
         </form>
@@ -109,5 +118,23 @@ const ManageListing = () => {
     </div>
   )
 }
+
+/* --- Common Elements ---*/
+
+const Section = ({title, children})=>(
+  <div className='bg-white rounded-lg border border-gray-200 p-6 space-y-6'>
+    <h2 className='text-lg font-semibold text-gray-800'>
+      {title}
+    </h2>
+    {children}
+  </div>
+)
+
+const InputField = ({label, value, onChange, placeholder, type = 'text', required = false, min=null, max=null})=>(
+  <div>
+    <label className='block text-sm font-medium text-gray-700 mb-2'>{label}</label>
+    <input type={type} min={min} max={max} placeholder={placeholder} value={value} onChange={(e)=>onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300' required={required} />
+  </div>
+)
 
 export default ManageListing
