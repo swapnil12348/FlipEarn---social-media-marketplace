@@ -129,6 +129,8 @@ const ManageListing = () => {
               <SelectField label='Primary Audience Age Range' options={ageRanges} value={formData.age_range} onChange={(v) => handleInputChange('age_range', v)} />
             </div>
             <div className='space-y-3'>
+              <CheckboxField label='Account is verified on the platform' checked={formData.verified} onChange={(v) => handleInputChange('verified', v)}/>
+              <CheckboxField label='Account is monetized' checked={formData.monetized} onChange={(v) => handleInputChange('monetized', v)}/>
               
 
             </div>
