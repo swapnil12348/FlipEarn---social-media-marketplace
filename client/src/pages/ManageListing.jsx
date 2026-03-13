@@ -135,6 +135,13 @@ const ManageListing = () => {
 
             </div>
           </Section>
+
+          {/* PRICING */}
+          <Section title='Pricing & Description'>
+            <InputField label='Asking Price (USD) *' type='number' min={0} value={formData.price} placeholder='2500.00' onChange={(v) => handleInputChange('price', v)} required={true}/>
+            <TextareaField label='Description *' value={formData.description} onChange={(v)=> handleInputChange('description', v)} required={true}/>
+
+          </Section>
         </form>
       </div>
     </div>
