@@ -126,6 +126,10 @@ const ManageListing = () => {
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 '>
               <InputField label='Primary Audience Country'  value={formData.country} placeholder='United States' onChange={(v)=>handleInputChange('country', v)} />
+              <SelectField label='Primary Audience Age Range' options={ageRanges} value={formData.age_range} onChange={(v) => handleInputChange('age_range', v)} />
+            </div>
+            <div className='space-y-3'>
+
             </div>
           </Section>
         </form>
@@ -161,6 +165,21 @@ const SelectField = ({label, options, value, onChange, required = false}) =>(
         <option key={opt} value={opt}>{opt}</option>
       ))}
     </select>
+
+  </div>
+)
+
+const CheckboxField = ({label, checked, onChange, required=false})=>(
+  <label className='flex items-center space-x-2 cursor-pointer'>
+    <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className='size-4' required={required} />
+    <span className='text-sm text-gray-700'>{label}</span>
+  </label>
+)
+
+const TextareaField = ({label, value, onChange, required = false})=>(
+  <div>
+    <label className='block text-sm font-medium text-gray-700 mb-2'>{label}</label>
+    <textarea rows={5}  value={value} onChange={(e) => onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300'></textarea>
 
   </div>
 )
