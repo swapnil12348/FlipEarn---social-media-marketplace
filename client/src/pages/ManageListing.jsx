@@ -129,6 +129,7 @@ const ManageListing = () => {
               <SelectField label='Primary Audience Age Range' options={ageRanges} value={formData.age_range} onChange={(v) => handleInputChange('age_range', v)} />
             </div>
             <div className='space-y-3'>
+              
 
             </div>
           </Section>
@@ -179,7 +180,7 @@ const CheckboxField = ({label, checked, onChange, required=false})=>(
 const TextareaField = ({label, value, onChange, required = false})=>(
   <div>
     <label className='block text-sm font-medium text-gray-700 mb-2'>{label}</label>
-    <textarea rows={5}  value={value} onChange={(e) => onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300'></textarea>
+    <textarea rows={5}  value={value} onChange={(e) => onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300' required={required}/>
 
   </div>
 )
