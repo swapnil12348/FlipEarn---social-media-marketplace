@@ -119,12 +119,15 @@ const ManageListing = () => {
             <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
               <InputField label='Followers count *' type='number' min={0} value={formData.followers_count} placeholder='10000' onChange={(v)=>handleInputChange('followers_count', v)} required={true}/>
               <InputField label='Engagement Rate (%) ' type='number' min={0} max={100} value={formData.engagement_rate} placeholder='4' onChange={(v)=>handleInputChange('engagement_rate', v)} />
+              <InputField label='Monthy Views/Impressions ' type='number' min={0} max={100} value={formData.monthly_views} placeholder='100000' onChange={(v)=>handleInputChange('monthly_views', v)} />
+              
 
             </div>
 
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 '>
+              <InputField label='Primary Audience Country'  value={formData.country} placeholder='United States' onChange={(v)=>handleInputChange('country', v)} />
+            </div>
           </Section>
-
-          
         </form>
       </div>
     </div>
