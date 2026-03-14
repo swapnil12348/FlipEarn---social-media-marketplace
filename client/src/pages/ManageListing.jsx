@@ -144,10 +144,15 @@ const ManageListing = () => {
 
           {/* IMAGES */}
           <Section title='Screenshots & Proof'>
+            <div className='border-2 border-dashed border-gray-300 rounded-lg p-6 text-center'>
+
             <input type='file' id='images' multiple accept='image/*' onChange={handleImageUpload} className='hidden' />
             <Upload className='w-12 h-12 text-gray-400 mx-auto mb-4'/>
             <label htmlFor="images" className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer'>Choose Files</label>
+            <p className='text-sm text-gray-500 mt-2'>Upload screenshots or proof of account analytics</p>
 
+            </div>
+            
           </Section>
         </form>
       </div>
