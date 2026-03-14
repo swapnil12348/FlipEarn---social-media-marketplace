@@ -53,7 +53,7 @@ const ManageListing = () => {
 
   const removeImage = (indexToRemove) => {
     setFormData((prev) => ({
-      ...preview, images: prev.images.filter((_, i) => i !== indexToRemove)
+      ...prev, images: prev.images.filter((_, i) => i !== indexToRemove)
     }))
   }
 
@@ -152,6 +152,20 @@ const ManageListing = () => {
             <p className='text-sm text-gray-500 mt-2'>Upload screenshots or proof of account analytics</p>
 
             </div>
+            {formData.images.length > 0 && (
+              <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mt-4'>
+                {formData.images.map((img,index)=>(
+                  <div key={index} className='relative'>
+                    <img src={typeof img === 'string' ? img : URL.createObjectURL(img)} alt={`image ${index + 1}`} className='w-full h-24 object-cover rounded-lg'/>
+                    <button type='button' onClick={() => removeImage(index)} className='absolute -top-2 -right-2 size-6 bg-red-600 text-white rounded-full hover:bg-red-700'>
+                      x
+                    </button>
+
+                  </div>
+                ))}
+
+              </div>
+            )}
             
           </Section>
         </form>
