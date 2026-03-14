@@ -1,4 +1,4 @@
-import { Loader2Icon } from 'lucide-react'
+import { Loader2Icon, Upload } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
@@ -140,6 +140,13 @@ const ManageListing = () => {
           <Section title='Pricing & Description'>
             <InputField label='Asking Price (USD) *' type='number' min={0} value={formData.price} placeholder='2500.00' onChange={(v) => handleInputChange('price', v)} required={true}/>
             <TextareaField label='Description *' value={formData.description} onChange={(v)=> handleInputChange('description', v)} required={true}/>
+          </Section>
+
+          {/* IMAGES */}
+          <Section title='Screenshots & Proof'>
+            <input type='file' id='images' multiple accept='image/*' onChange={handleImageUpload} className='hidden' />
+            <Upload className='w-12 h-12 text-gray-400 mx-auto mb-4'/>
+            <label htmlFor="images" className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer'>Choose Files</label>
 
           </Section>
         </form>
