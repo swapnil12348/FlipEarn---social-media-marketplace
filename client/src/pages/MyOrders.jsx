@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { dummyOrders } from '../assets/assets';
 import toast from 'react-hot-toast';
+import { Loader2Icon } from 'lucide-react';
 
 const MyOrders   = () => {
 
@@ -35,6 +36,17 @@ const MyOrders   = () => {
       
     }
   }
+
+  if (loading) {
+    return(
+      <div className='h-[80vh] flex items-center justify-center'>
+        <Loader2Icon className='size-7 animate-spin text-indigo-600'/>
+      </div>
+    )
+    
+  }
+
+
 
 
   if(!orders.length){
