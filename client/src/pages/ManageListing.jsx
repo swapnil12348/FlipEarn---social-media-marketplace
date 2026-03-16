@@ -168,6 +168,16 @@ const ManageListing = () => {
             )}
             
           </Section>
+          <div className='flex justify-end gap-3 text-sm'>
+            <button onClick={() => navigate(-1)} type='button' className='px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'>
+              Cancel
+            </button>
+            <button type='submit' className='px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors'>
+              {isEditing ? 'Update Listing' : 'Create Listing '}
+
+            </button>
+
+          </div>
         </form>
       </div>
     </div>
