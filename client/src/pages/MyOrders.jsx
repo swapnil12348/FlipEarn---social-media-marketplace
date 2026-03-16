@@ -88,10 +88,16 @@ const MyOrders   = () => {
                         @{listing.username} ~ <span className='capitalize'>{listing.platform}</span>
                       </p>
                       <div className='flex gap-2 mt-2'>
-                        {listing.verified &7 (
+                        {listing.verified && (
                           <span className='flex items-center text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md'>
-                            <CheckCircle2 className='w-3 h-3 mr-1'/>
+                            <CheckCircle2 className='w-3 h-3 mr-1'/> Verified
+                          </span>
+                        )}
 
+                        {listing.monetized && (
+                          <span className='flex items-center text-xs bg-green-50 text-green-600 px-2 py-1 rounded-md'>
+                            <span className='text-xs font-medium'>$ </span>
+                            Monetized
                           </span>
                         )}
 
