@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { dummyOrders } from '../assets/assets';
+import { dummyOrders, platformIcons } from '../assets/assets';
 import toast from 'react-hot-toast';
-import { Loader2Icon } from 'lucide-react';
+import { CheckCircle2, Loader2Icon } from 'lucide-react';
 
 const MyOrders   = () => {
 
@@ -63,8 +63,49 @@ const MyOrders   = () => {
   }
 
   return (
-    <div>
-        <h1>My Orders Page</h1>
+    <div className='px-4 md:px-16 lg:px-24 xl:px-32 py-6'>
+      <h2 className='text-2xl font-semibold mb-6'>My Orders</h2>
+
+      <div className='space-y-4'>
+        {orders.map((order)=>{
+          const id = order.id;
+          const listing = order.listing;
+          const credential = order.credential;
+          const isExpanded = expandedId === id;
+
+          return(
+            <div key={id} className='bg-white rounded-lg border border-gray-200 p-5 flex flex-col max-w-4xl'>
+              <div className='flex items-start gap-4 flex-1'>
+                <div className='p-2 rounded-lg bg-gray-50 max-sm:hidden'>
+                  {platformIcons[listing.platform]}
+                </div>
+
+                <div className='flex-1'>
+                  <div className='flex items-start justify-between gap-4'>
+                    <div>
+                      <h3 className='text-lg font-semibold'>{listing.title}</h3>
+                      <p className='text-sm text-gray-500 mt-1'>
+                        @{listing.username} ~ <span className='capitalize'>{listing.platform}</span>
+                      </p>
+                      <div className='flex gap-2 mt-2'>
+                        {listing.verified &7 (
+                          <span className='flex items-center text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md'>
+                            <CheckCircle2 className='w-3 h-3 mr-1'/>
+
+                          </span>
+                        )}
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+
+      </div>
+       
     </div>
   )
 }
