@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { dummyOrders, platformIcons } from '../assets/assets';
 import toast from 'react-hot-toast';
 import { CheckCircle2, ChevronDown, ChevronUp, Loader2Icon } from 'lucide-react';
+import {format} from 'date-fns'
 
 const MyOrders   = () => {
 
@@ -129,13 +130,42 @@ const MyOrders   = () => {
                     <>
                     <ChevronDown className='size-4'/> View Credentials
                     </>
-                   )
-
-                  }
-
+                   )}
                 </button>
-
+                <div className='text-xs text-gray-500 mt-2 text-right'>
+                  <div>
+                    Credential Purchased : {format(new Date(order.createdAt), "MMM d, yyyy")}
+                  </div>
+                </div>
               </div>
+              {
+                isExpanded && (
+                  <div className='mt-4 md:mt-0 pt-4'>
+                    <div className='space-y-2'>
+                      {credential.updatedCredential.map((cred)=>(
+                        <div key={cred.name} className='flex items-center justify-between gap-3 bg-gray-50 rounded-md p-2'>
+                          <div>
+                            <p className='text-sm font-medium text-gray-800'>{cred.name}</p>
+                            <p className='text-xs text-gray-500'>{cred.type}</p>
+                          </div>
+
+                          <div className='flex items-center gap-2'>
+                            <code className='text-sm font-mono'>
+                              {mask(cred.value, cred.type)}
+
+                            </code>
+
+                          </div>
+
+                        </div>
+                      ))}
+
+                    </div>
+
+                  </div>
+
+                )
+              }
             </div>
           )
         })}
