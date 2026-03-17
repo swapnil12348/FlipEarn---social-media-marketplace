@@ -100,9 +100,18 @@ const MyOrders   = () => {
                             Monetized
                           </span>
                         )}
-
                       </div>
                     </div>
+
+                    <div className='text-right'>
+                      <p className='text-2xl font-bold'>
+                        {currency}
+                        {Number(order.amount).toLocaleString()}
+                      </p>
+                      <p className='text-sm text-gray-500'>USD</p>
+
+                    </div>
+
                   </div>
                 </div>
               </div>
