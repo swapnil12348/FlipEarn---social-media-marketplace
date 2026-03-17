@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { dummyOrders, platformIcons } from '../assets/assets';
 import toast from 'react-hot-toast';
-import { CheckCircle2, ChevronDown, ChevronUp, Loader2Icon } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ChevronUp, Copy, Loader2Icon } from 'lucide-react';
 import {format} from 'date-fns'
 
 const MyOrders   = () => {
@@ -152,11 +152,14 @@ const MyOrders   = () => {
                           <div className='flex items-center gap-2'>
                             <code className='text-sm font-mono'>
                               {mask(cred.value, cred.type)}
-
                             </code>
+                            <button onClick={(e)=>{e.stopPropagation();
+                              copy(cred.value)
+                            }} className='px-2 py-1 text-xs bg-white border border-gray-200 rounded hover:shadow ' title="Copy Credential">
+                              <Copy className='size-4'/>
 
+                            </button>
                           </div>
-
                         </div>
                       ))}
 
