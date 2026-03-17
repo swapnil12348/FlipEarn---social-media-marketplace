@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { dummyOrders, platformIcons } from '../assets/assets';
 import toast from 'react-hot-toast';
-import { CheckCircle2, Loader2Icon } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ChevronUp, Loader2Icon } from 'lucide-react';
 
 const MyOrders   = () => {
 
@@ -114,6 +114,27 @@ const MyOrders   = () => {
 
                   </div>
                 </div>
+              </div>
+
+              <div className='flex flex-col gap-2 items-end'>
+                <button onClick={()=> setExpandedId((p)=>(p === id ? null : id))} className='flex items-center gap-2 bg-white border border-gray-200 px-3 py-2 rounded hover:shadow text-sm' aria-expanded={isExpanded}>
+                  {isExpanded ?
+                   (
+                   <>
+                   <ChevronUp className='size-4'/> Hide Credentials
+                   </>
+                   )
+                    : 
+                   (
+                    <>
+                    <ChevronDown className='size-4'/> View Credentials
+                    </>
+                   )
+
+                  }
+
+                </button>
+
               </div>
             </div>
           )
