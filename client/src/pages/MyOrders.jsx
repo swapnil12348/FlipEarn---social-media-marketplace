@@ -96,7 +96,7 @@ const MyOrders   = () => {
 
                         {listing.monetized && (
                           <span className='flex items-center text-xs bg-green-50 text-green-600 px-2 py-1 rounded-md'>
-                            <span className='text-xs font-medium'>$ </span>
+                            <span className='text-xs font-medium mr-1'>$</span>
                             Monetized
                           </span>
                         )}
