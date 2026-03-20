@@ -4,7 +4,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "postinstall": "prisma generate",
+    "postinstall": "chmod +x node_modules/.bin/prisma && prisma generate",
     "server": "nodemon server.js",
     "start": "node server.js"
   },
