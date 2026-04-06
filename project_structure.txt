@@ -72,15 +72,22 @@
 │   └── package-lock.json
 │   └── package.json
 │   └── README.md
+│   └── vercel.json
 │   └── vite.config.js
 └── server/
 │   └── configs/
 │   │   └── prisma.js
+│   └── controllers/
+│   │   └── listingController.js
 │   └── inngest/
 │   │   └── index.js
+│   └── middlewares/
+│   │   └── authMiddleware.js
 │   └── prisma/
 │   │   └── schema.prisma
 │   └── .env
 │   └── package-lock.json
 │   └── package.json
 │   └── server.js
+│   └── vercel.json
+└── .gitignore
