@@ -17,6 +17,15 @@ export const addListing = async (req,res) => {
 
         const accountDetails = JSON.parse(req.body.accountDetails)
 
+        accountDetails.followers_count = parseFloat(accountDetails.followers_count)
+        accountDetails.engagement_rate = parseFloat(accountDetails.engagement_rate)
+        accountDetails.monthly_views = parseFloat(accountDetails.monthly_views)
+        accountDetails.price = parseFloat(accountDetails.price)
+        accountDetails.platform = accountDetails.platform.toLowerCase();
+        accountDetails.nice = accountDetails.platform.toLowerCase()
+
+        accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null 
+
     } catch (error) {
         
     }
