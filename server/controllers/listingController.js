@@ -24,7 +24,12 @@ export const addListing = async (req,res) => {
         accountDetails.platform = accountDetails.platform.toLowerCase();
         accountDetails.nice = accountDetails.platform.toLowerCase()
 
-        accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null 
+        accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
+        
+        const uploadImages = req.files.map((file)={
+            
+        })
+
 
     } catch (error) {
         
