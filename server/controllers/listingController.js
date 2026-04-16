@@ -1,6 +1,8 @@
 // Controller for adding listing to database
 
+import imagekit from "../configs/imageKit";
 import prisma from "../configs/prisma";
+import fs from 'fs';
 
 export const addListing = async (req,res) => {
     try {
@@ -26,8 +28,16 @@ export const addListing = async (req,res) => {
 
         accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
         
-        const uploadImages = req.files.map((file)={
-            
+        const uploadImages = req.files.map(async (file)={
+
+
+            const response = await imagekit.files.upload({
+                file: fs.createReadStream(file.path),
+                fileName: `${Date.now()}.png`,
+                transformation: {pre: "w-1280, h-auto"}
+                
+            });
+
         })
 
 
