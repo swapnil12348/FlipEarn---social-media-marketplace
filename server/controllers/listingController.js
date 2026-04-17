@@ -28,21 +28,121 @@ export const addListing = async (req,res) => {
 
         accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
         
-        const uploadImages = req.files.map(async (file)={
+        const uploadImages = req.files.map(async (file)=>{
 
 
             const response = await imagekit.files.upload({
                 file: fs.createReadStream(file.path),
                 fileName: `${Date.now()}.png`,
+                folder: "flip-earn",
                 transformation: {pre: "w-1280, h-auto"}
                 
             });
 
+            return response.url
+
         })
+
+            // Wait for all uploads to complete
+
+            const images = await Promise.all(uploadImages)
+
+            const listing = await prisma.listing.create({
+                data:{
+                    ownerId: userId,
+                    images,
+                    ...accountDetails
+                }
+            })
+
+            return res.status(201).json({message: "account Listed successfully", listing})
 
 
     } catch (error) {
+
+        console.log(error);
+        res.status(500).json({message: error.code || error.message})
         
     }
     
 }
+
+//Controller ofr Getting All Public Listing
+
+
+export const getAllPublicListing = async (req,res) =>{
+    try {
+        const listings = await prisma.listing.findMany({
+            where: {status: "active"},
+            include: {owner: true},
+            orderBy: {createdAt: "desc"},
+
+        })
+
+        if (!listings || listings.length === 0) {
+            return res.json({listings: []});
+        }
+
+        return res.json({listings});
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: error.code || error.message})
+    }
+}
+
+// Controller for getting all user listing
+
+export const getAllUserListing = async (req,res) =>{
+    try {
+        const {userId} = await req.auth();
+        // get all listings except deleted
+
+        const listings = await prisma.listing.findMany({
+            where: {ownerId: userId, status: {not: "deleted"}},
+            orderBy: {createdAt: "desc"}
+        })
+
+        const user = await prisma.user.findUnique({
+            where: {id: userId}
+        })
+
+        const balance = {
+            earned: user.earned,
+            withdrawn: user.withdrawn,
+            available: user.earned - user.withdrawn
+        }
+
+        if (!listings || listings.length === 0) {
+            return res.json({listings: [], balance});
+            
+        }
+
+        return res.json({listings, balance})
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: error.code || error.message})
+        
+    }
+}
+
+
+// Controller for updating listing in database
+
+export const updateListing = async(req, res) =>{
+    try {
+        const {userId} = await req.auth();
+        const accountDetails = JSON.parse(req.body.accountDetails)
+
+        if (req.files.length + accountDetails.images.length > 5) {
+            
+        }
+
+    } catch (error) {
+        
+    }
+}
+
+
+
