@@ -136,8 +136,35 @@ export const updateListing = async(req, res) =>{
         const accountDetails = JSON.parse(req.body.accountDetails)
 
         if (req.files.length + accountDetails.images.length > 5) {
+            return res.status(400).json({ message: "You can only upload up to 5 images"})
+        }
+
+        accountDetails.followers_count = parseFloat(accountDetails.followers_count)
+        accountDetails.engagement_rate = parseFloat(accountDetails.engagement_rate)
+        accountDetails.monthly_views = parseFloat(accountDetails.monthly_views)
+        accountDetails.price = parseFloat(accountDetails.price)
+        accountDetails.platform = accountDetails.platform.toLowerCase();
+        accountDetails.niche = accountDetails.niche.toLowercase();
+
+        accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
+
+        const listing = await prisma.listing.update({
+            where: {id: accountDetails.id, ownerId: userId},
+            data: accountDetails
+        })
+
+        if (!listing) {
+            return res.status(400).json({ message: "Listing not found" });
+        }
+
+        if (listing.status === "sold") {
+            return res.status(400).json({ message: "you can't update sold listing"})
+        }
+
+        if (condition) {
             
         }
+
 
     } catch (error) {
         
