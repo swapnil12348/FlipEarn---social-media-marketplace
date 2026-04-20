@@ -288,9 +288,40 @@ export const addCredential = async (req,res)=>{
             where:{id: listingId, ownerId: userId}
         })
 
+        if (!listing) {
+            return res.status(404).json({message:"Listing not found or you are not the owner"})
+        }
+
+        await prisma.credential.create({
+            data:{
+                listingId,
+                originalCredential: credential
+            }
+        })
+
+        await prisma.listing.update({
+            where: {id:listingId},
+            data: {isCredentialSubmitted: true}
+        })
+
+        return res.json({message: "Credential added successfully"})
+
     } catch (error) {
         console.error(error);
         res.status(500).json({message: error.code || error.message})
+        
+    }
+}
+
+
+export const markFeatured = async (req,res) =>{
+    try {
+        const {id} = req.params;
+        const {userId} = await req.auth()
+
+    } catch (error) {
+        console.log(error)
+        res.status(500)
         
     }
 }
