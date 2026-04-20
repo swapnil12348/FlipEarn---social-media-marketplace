@@ -202,5 +202,98 @@ export const updateListing = async (req, res) => {
     }
 }
 
+export const toggleStatus = async (req, res)=> {
+    try {
+        const {id}=req.params;
+        const {userId} = await req.auth();
+
+        const listing = await prisma.listing.findUnique({
+            where:{id, ownerId: userId},
+        })
+
+        if (!listing) {
+            return res.status(404).json({message: "Listing not found"});
+        }
+
+        if (listing.status === "active" || listing.status === "inactive") {
+            await prisma.listing.update({
+                where: {id, ownerId: userId},
+                data: {status: listing.status === "active" ? "inactive" : "active"}
+            })
+            
+        }else if(listing.status === "ban"){
+            return res.status(400).json({message: "Your listing is banned "});
+        }else if(listing.status === "sold"){
+            return res.status(400).json({message: "Your listing is sold"})
+        }
+
+        return res.json ({message : "Listing status updated successfully", listing});
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: error.code || error.message})
+    }
+}
+
+export const deleteUserListing = async (req,res) =>{
+    try {
+        const {userId} = await req.auth();
+        const {listingId}= req.params;
+
+        const listing = await prisma.listing.findFirst({
+            where: {id: listingId, ownerId: userId},
+            include: {owner:true}
+        })
+
+        if (!listing) {
+            return res.status(404).json({ message: "Listing not found"})
+        }
+
+        if (listing.status === "sold") {
+            return res.status(400).json({message: "sold listing can't be deleted"})            
+        }
+
+        // if password has been changed, send the new passwrod to the owner
+
+        if (listing.isCredentialChanged) {
+            // send email to owner
+
+            
+        }
+
+        await prisma.listing.update({
+            where: {id: listingId},
+            data:{status: "deleted"}
+        })
+
+        return res.json({message: "Listing deleted successfully"})
+
+
+
+    } catch (error) {
+        
+    }
+}
+
+
+export const addCredential = async (req,res)=>{
+    try {
+        const {userId} = await req.auth();
+        const {listingId, credential} = req.body;
+
+        if (credential.length === 0 || !listingId) {
+            return res.status(400).json({message: "Missing Fields"})
+        }
+
+        const listing = await prisma.listing.findFirst({
+            where:{id: listingId, ownerId: userId}
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: error.code || error.message})
+        
+    }
+}
+
 
 
