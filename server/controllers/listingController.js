@@ -189,12 +189,15 @@ export const updateListing = async (req, res) => {
                 })
 
                 return res.json ({message: "Account Updated successsfully", listing})
-
-
         }
+
+        return res.json ({message: "Account Updated successfully", listing})
+
 
 
     } catch (error) {
+        console.log(error);
+        res.status(500).json({message: error.code || error.message})
 
     }
 }
