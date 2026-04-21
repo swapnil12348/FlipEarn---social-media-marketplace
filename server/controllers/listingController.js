@@ -321,15 +321,83 @@ export const markFeatured = async (req,res) =>{
 
         if (req.plan !== "premium") {
             return res.status(400).json({message:"Premium plan required"})
-            
         }
+
+        //Unset all other featured listings
+        await prisma.listing.updateMany({
+            where:{ownerId:userId},
+            data: {featured: false},
+        })
+        //mark the listing as featured
+
+        await prisma.listing.update({
+            where:{id},
+            data: {featured:true}
+        })
+
+        return res.json({Message: "Listing marked as featured"})
 
     } catch (error) {
         console.log(error)
-        res.status(500)
+        res.status(500).json({message: error.code || error.message})
         
     }
 }
+
+export const getAllUserOrders = async (req,res) =>{
+    try {
+        const {userId} = await req.auth();
+        let orders = await prisma.transaction.findMany({
+            where: {userId, isPaid: true},
+            include: {listing: true},
+        })
+
+        if (!orders || orders.length === 0) {
+            return res.json({ orders: []});
+        }
+
+        // attach the credential to each other
+
+        const credentials = await prisma.credential.findMany({
+            where: {listingId: {in: orders.map((order)=>order.listingId)}}
+        })
+
+        const ordersWithCredentials = orders.map((order)=>{
+            const credential = credentials.find((cred)=> cred.listingId === order.listingId)
+            return {...order, credential}
+        })
+
+        return res.json({orders: ordersWithCredentials});
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: error.code || error.message})
+        
+    }
+}
+
+export const withdrawAmount = async (req, res) =>{
+    try {
+        const {userId} = await req.auth()
+        const {amount,account}=req.body;
+
+        const user = await prisma.user.findUnique({where: {id: userId}})
+
+        const balance = user.earned - user.withdrawn
+
+        if (amount > balance) {
+            return res.status(400).json({message: "Insufficient balance"})
+            
+        }
+
+        const withdrawal = await prisma.withdrawal.create({})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.code || error.message });
+    }
+}
+
+
 
 
 
