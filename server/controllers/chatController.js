@@ -9,7 +9,20 @@ export const getChat = async (req, res)=>{
             where: {id: listingId}
         })
 
-        
+        if (!listing) {
+            return res.status(404).json({message: "Listing not found"});
+        }
+
+        //Find existing chat
+
+        let exitingChat = null;
+
+        if (chatId) {
+            existingChat = await
+            
+        }
+
+
     } catch (error) {
         
     }
