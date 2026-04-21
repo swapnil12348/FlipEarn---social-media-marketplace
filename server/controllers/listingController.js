@@ -390,11 +390,28 @@ export const withdrawAmount = async (req, res) =>{
             
         }
 
-        const withdrawal = await prisma.withdrawal.create({})
+        const withdrawal = await prisma.withdrawal.create({
+            data:{
+                userId, amount, account
+            }
+        })
+
+        await prisma.user.update({
+            where:{id:userId},
+            data: {withdrawn: {increment: amount}}
+
+        })
+
+        return res.json ({message: "Applied for withdrawal", withdrawal});
+
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: error.code || error.message });
     }
+}
+
+export const purchaseAccount = async (req,res) =>{
+    
 }
 
 
