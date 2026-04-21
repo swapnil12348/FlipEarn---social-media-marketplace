@@ -317,7 +317,12 @@ export const addCredential = async (req,res)=>{
 export const markFeatured = async (req,res) =>{
     try {
         const {id} = req.params;
-        const {userId} = await req.auth()
+        const {userId} = await req.auth();
+
+        if (req.plan !== "premium") {
+            return res.status(400).json({message:"Premium plan required"})
+            
+        }
 
     } catch (error) {
         console.log(error)
