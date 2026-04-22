@@ -8,7 +8,22 @@ import api from "../../configs/axios";
 export const getAllPublicListing = createAsyncThunk("listing/getAllPublicListing", async ()=>{
     try {
         const {data} = await api.get('/api/listing/public')
+        return data;
     } catch (error) {
+        console.log(error)
+        return [];
+        
+    }
+})
+
+//Get all user listings
+
+export const getAllUserListings = createAsyncThunk("listing/getAllUserListing", async () =>{
+    try {
+        
+    } catch (error) {
+        console.log(error)
+        return [];
         
     }
 })
