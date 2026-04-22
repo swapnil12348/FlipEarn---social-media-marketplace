@@ -117,8 +117,28 @@ export const sendChatMessage = async (req,res) =>{
             return res.status(404).json({ message: "Chat not found"});
         }else if(chat.listing.status !== "active"){
             return res.status(400).json({message: `Listing is ${chat.listing.status}`});
-
         }
+
+        const newMessage = {
+            message,
+            sender_id: userId,
+            chatId,
+            createdAt: new Date()
+        }
+
+        await prisma.message.create({
+            data: newMessage
+        })
+
+        res.json({message: "Message Sent", newMessage})
+
+        await prisma.chat.update({
+            where:{id:chatId},
+            data: {lastMessage: newMessage.message, isLastMessageRead: false, lastMessageSenderId: userId}
+        })
+
+
+
     } catch (error) {
         console.log(error)
         res.status(500).json({message: error.code || error.message})
