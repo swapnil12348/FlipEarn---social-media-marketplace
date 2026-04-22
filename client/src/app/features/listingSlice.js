@@ -1,11 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { dummyListings } from "../../assets/assets";
+import api from "../../configs/axios";
+
+
+//Get all public listings
+
+export const getAllPublicListing = createAsyncThunk("listing/getAllPublicListing", async ()=>{
+    try {
+        const {data} = await api.get('/api/listing/public')
+    } catch (error) {
+        
+    }
+})
 
 const listingSlice = createSlice({
     name:"listing",
     initialState:{
-        listings : dummyListings,
-        userListings: dummyListings,
+        listings : [],
+        userListings: [],
         balance:{
             earned: 0,
             withdrawn: 0,
