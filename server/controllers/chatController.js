@@ -99,3 +99,29 @@ export const getAllUserChats = async (req,res) =>{
         res.status(500).json({message: error.code || error.message})
     }
 }
+
+// Controller for adding Message to Chat
+
+export const sendChatMessage = async (req,res) =>{
+    try {
+        const { userId }= await req.auth();
+        const { chatId, message } = req.body;
+        const chat = await prisma.chat.findFirst({
+            where:{
+                AND: [{id: chatId}, {OR: [{chatUserId: userId}, {ownerUserId: userId}]}]
+            },
+            include: {listing: true, ownerUser: true, chatUser: true}
+        })
+
+        if (!chat) {
+            return res.status(404).json({ message: "Chat not found"});
+        }else if(chat.listing.status !== "active"){
+            return res.status(400).json({message: `Listing is ${chat.listing.status}`});
+
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: error.code || error.message})
+        
+    }
+}
