@@ -17,7 +17,7 @@ export const getChat = async (req, res)=>{
 
         //Find existing chat
 
-        let exitingChat = null;
+        let existingChat = null;
 
         if (chatId) {
             existingChat = await prisma.chat.findFirst({
@@ -26,10 +26,28 @@ export const getChat = async (req, res)=>{
             })
             
         }else{
-            exitingChat = await prisma.chat.findFirst({
+            existingChat = await prisma.chat.findFirst({
                 where: {listingId, chatUserId: userId, ownerUserId: listing.ownerId},
                 include: {listing: true, ownerUser: true, chatUser: true, messages: true}
             })
+        }
+
+        if (existingChat) {
+            res.json({ chat: existingChat});
+            if (existingChat.isLastMessageRead === false) {
+                const lastMessage =  existingChat.messages[existingChat.messages.length - 1]
+                const isLastMessageSendByMe = lastMessage.sender_id === userId;
+
+                if (!isLastMessageSendByMe) {
+                    await prisma.chat.update({
+                        where: {id: existingChat.id},
+                        data: {isLastMessageRead: true}
+                    })
+                    
+                }
+                
+            }
+            
         }
 
 
