@@ -47,12 +47,55 @@ export const getChat = async (req, res)=>{
                 }
                 
             }
-            
+            return null
+
         }
+
+        const newChat = await prisma.chat.create({
+            data: {
+                listingId,
+                chatUserId: userId,
+                ownerUserId: listing.ownerId
+            }
+        })
+
+        const chatWithData = await prisma.chat.findUnique({
+            where: {id: newChat.id},
+            include: {listing: true, ownerUser: true, chatUser: true}
+        })
+
+        return res.json({ chat: chatWithData})
 
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        res.status(500).json({message: error.code || error.message})
         
+    }
+}
+
+
+//Controller for getting all chats for user
+
+export const getAllUserChats = async (req,res) =>{
+    try {
+        const {userId} = await req.auth();
+        const chats = await prisma.chat.findMany({
+            where: {OR: [{ chatUserId: userId}, {ownerUserId:userId}]},
+            include: {listing: true, ownerUser: true, chatUser: true},
+            orderBy: {updatedAt: "desc"}
+        })
+
+        if (!chats || chats.length === 0) {
+            return res.json({ chats: []})
+    
+        }
+
+        return res.json({chats})
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: error.code || error.message})
     }
 }
