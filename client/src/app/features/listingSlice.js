@@ -18,8 +18,11 @@ export const getAllPublicListing = createAsyncThunk("listing/getAllPublicListing
 
 //Get all user listings
 
-export const getAllUserListings = createAsyncThunk("listing/getAllUserListing", async () =>{
+export const getAllUserListings = createAsyncThunk("listing/getAllUserListing", async ({getToken}) =>{
     try {
+        const token = await getToken();
+        const {data} = await api.get('api/listing/user', {headers: {Authorization: `Bearer ${token}`}})
+        return data
         
     } catch (error) {
         console.log(error)
@@ -44,6 +47,15 @@ const listingSlice = createSlice({
         setListings: (state, action)=>{
             state.listings = action.payload
         }
+    },
+    extraReducers: (builder)=>{
+        builder.addCase(getAllPublicListing.fulfilled, (state,action)=>{
+            state.listings = action.payload.listings;
+        });
+        builder.addCase(getAllUserListings.fulfilled, (state,action)=>{
+            state.userListings = action.payload.listings;
+            state.balance = action.payload.balance;
+        })
     }
 
 })
