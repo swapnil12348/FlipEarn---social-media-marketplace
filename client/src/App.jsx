@@ -21,6 +21,8 @@ import Withdrawal from './pages/admin/Withdrawal'
 
 const App = () => {
   const{pathname}=useLocation();
+  const {getToken}= useAuth();
+  const {user, isLoaded}= useUser()
   return (
     <div>
       <Toaster/>
