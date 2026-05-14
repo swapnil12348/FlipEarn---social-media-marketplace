@@ -29,22 +29,17 @@ export const addListing = async (req, res) => {
         accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
 
         const uploadImages = req.files.map(async (file) => {
-
-
             const response = await imagekit.files.upload({
                 file: fs.createReadStream(file.path),
                 fileName: `${Date.now()}.png`,
                 folder: "flip-earn",
                 transformation: { pre: "w-1280, h-auto" }
-
             });
 
             return response.url
-
         })
 
         // Wait for all uploads to complete
-
         const images = await Promise.all(uploadImages)
 
         const listing = await prisma.listing.create({
@@ -57,18 +52,13 @@ export const addListing = async (req, res) => {
 
         return res.status(201).json({ message: "account Listed successfully", listing })
 
-
     } catch (error) {
-
         console.log(error);
         res.status(500).json({ message: error.code || error.message })
-
     }
-
 }
 
-//Controller ofr Getting All Public Listing
-
+// Controller for Getting All Public Listing
 
 export const getAllPublicListing = async (req, res) => {
     try {
@@ -76,7 +66,6 @@ export const getAllPublicListing = async (req, res) => {
             where: { status: "active" },
             include: { owner: true },
             orderBy: { createdAt: "desc" },
-
         })
 
         if (!listings || listings.length === 0) {
@@ -96,8 +85,8 @@ export const getAllPublicListing = async (req, res) => {
 export const getAllUserListing = async (req, res) => {
     try {
         const { userId } = await req.auth();
-        // get all listings except deleted
 
+        // get all listings except deleted
         const listings = await prisma.listing.findMany({
             where: { ownerId: userId, status: { not: "deleted" } },
             orderBy: { createdAt: "desc" }
@@ -107,6 +96,11 @@ export const getAllUserListing = async (req, res) => {
             where: { id: userId }
         })
 
+        // FIX: guard against null user
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
         const balance = {
             earned: user.earned,
             withdrawn: user.withdrawn,
@@ -115,7 +109,6 @@ export const getAllUserListing = async (req, res) => {
 
         if (!listings || listings.length === 0) {
             return res.json({ listings: [], balance });
-
         }
 
         return res.json({ listings, balance })
@@ -123,10 +116,8 @@ export const getAllUserListing = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.code || error.message })
-
     }
 }
-
 
 // Controller for updating listing in database
 
@@ -144,29 +135,26 @@ export const updateListing = async (req, res) => {
         accountDetails.monthly_views = parseFloat(accountDetails.monthly_views)
         accountDetails.price = parseFloat(accountDetails.price)
         accountDetails.platform = accountDetails.platform.toLowerCase();
-        accountDetails.niche = accountDetails.niche.toLowercase();
+        accountDetails.niche = accountDetails.niche.toLowerCase(); // FIX: was toLowercase()
 
         accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
 
-        const listing = await prisma.listing.update({
-            where: { id: accountDetails.id, ownerId: userId },
-            data: accountDetails
+        // FIX: check listing exists and validate status BEFORE updating
+        const existingListing = await prisma.listing.findUnique({
+            where: { id: accountDetails.id, ownerId: userId }
         })
 
-        if (!listing) {
-            return res.status(400).json({ message: "Listing not found" });
+        if (!existingListing) {
+            return res.status(404).json({ message: "Listing not found" });
         }
 
-        if (listing.status === "sold") {
-            return res.status(400).json({ message: "you can't update sold listing" })
+        if (existingListing.status === "sold") {
+            return res.status(400).json({ message: "You can't update a sold listing" });
         }
 
         if (req.files.length > 0) {
             const uploadImages = req.files.map(async (file) => {
-
                 const response = await imagekit.files.upload({
-
-
                     file: fs.createReadStream(file.path),
                     fileName: `${Date.now()}.png`,
                     folder: "flip-earn",
@@ -175,234 +163,225 @@ export const updateListing = async (req, res) => {
                 return response.url
             })
 
-                // wait for all uploads to complete 
+            // wait for all uploads to complete
+            const images = await Promise.all(uploadImages);
 
-                const images = await Promise.all(uploadImages);
+            const listing = await prisma.listing.update({
+                where: { id: accountDetails.id, ownerId: userId },
+                data: {
+                    ownerId: userId,
+                    ...accountDetails,
+                    images: [...accountDetails.images, ...images]
+                }
+            })
 
-                const listing = await prisma.listing.update({
-                    where: { id: accountDetails.id, ownerId: userId },
-                    data: {
-                        ownerId: userId,
-                        ...accountDetails,
-                        images: [...accountDetails.images, ...images]
-                    }
-                })
-
-                return res.json ({message: "Account Updated successsfully", listing})
+            return res.json({ message: "Account Updated successfully", listing })
         }
 
-        return res.json ({message: "Account Updated successfully", listing})
+        const listing = await prisma.listing.update({
+            where: { id: accountDetails.id, ownerId: userId },
+            data: accountDetails
+        })
 
-
+        return res.json({ message: "Account Updated successfully", listing })
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({message: error.code || error.message})
-
+        res.status(500).json({ message: error.code || error.message })
     }
 }
 
-export const toggleStatus = async (req, res)=> {
+export const toggleStatus = async (req, res) => {
     try {
-        const {id}=req.params;
-        const {userId} = await req.auth();
+        const { id } = req.params;
+        const { userId } = await req.auth();
 
         const listing = await prisma.listing.findUnique({
-            where:{id, ownerId: userId},
+            where: { id, ownerId: userId },
         })
 
         if (!listing) {
-            return res.status(404).json({message: "Listing not found"});
+            return res.status(404).json({ message: "Listing not found" });
         }
 
         if (listing.status === "active" || listing.status === "inactive") {
             await prisma.listing.update({
-                where: {id, ownerId: userId},
-                data: {status: listing.status === "active" ? "inactive" : "active"}
+                where: { id, ownerId: userId },
+                data: { status: listing.status === "active" ? "inactive" : "active" }
             })
-            
-        }else if(listing.status === "ban"){
-            return res.status(400).json({message: "Your listing is banned "});
-        }else if(listing.status === "sold"){
-            return res.status(400).json({message: "Your listing is sold"})
+        } else if (listing.status === "ban") {
+            return res.status(400).json({ message: "Your listing is banned" });
+        } else if (listing.status === "sold") {
+            return res.status(400).json({ message: "Your listing is sold" })
         }
 
-        return res.json ({message : "Listing status updated successfully", listing});
+        return res.json({ message: "Listing status updated successfully", listing });
     } catch (error) {
         console.log(error)
-        res.status(500).json({message: error.code || error.message})
+        res.status(500).json({ message: error.code || error.message })
     }
 }
 
-export const deleteUserListing = async (req,res) =>{
+export const deleteUserListing = async (req, res) => {
     try {
-        const {userId} = await req.auth();
-        const {listingId}= req.params;
+        const { userId } = await req.auth();
+        const { listingId } = req.params;
 
         const listing = await prisma.listing.findFirst({
-            where: {id: listingId, ownerId: userId},
-            include: {owner:true}
+            where: { id: listingId, ownerId: userId },
+            include: { owner: true }
         })
 
         if (!listing) {
-            return res.status(404).json({ message: "Listing not found"})
+            return res.status(404).json({ message: "Listing not found" })
         }
 
         if (listing.status === "sold") {
-            return res.status(400).json({message: "sold listing can't be deleted"})            
+            return res.status(400).json({ message: "sold listing can't be deleted" })
         }
 
-        // if password has been changed, send the new passwrod to the owner
-
+        // if password has been changed, send the new password to the owner
         if (listing.isCredentialChanged) {
             // send email to owner
-
-            
         }
 
         await prisma.listing.update({
-            where: {id: listingId},
-            data:{status: "deleted"}
+            where: { id: listingId },
+            data: { status: "deleted" }
         })
 
-        return res.json({message: "Listing deleted successfully"})
-
-
+        return res.json({ message: "Listing deleted successfully" })
 
     } catch (error) {
-        
+        console.log(error)
+        res.status(500).json({ message: error.code || error.message })
     }
 }
 
-
-export const addCredential = async (req,res)=>{
+export const addCredential = async (req, res) => {
     try {
-        const {userId} = await req.auth();
-        const {listingId, credential} = req.body;
+        const { userId } = await req.auth();
+        const { listingId, credential } = req.body;
 
         if (credential.length === 0 || !listingId) {
-            return res.status(400).json({message: "Missing Fields"})
+            return res.status(400).json({ message: "Missing Fields" })
         }
 
         const listing = await prisma.listing.findFirst({
-            where:{id: listingId, ownerId: userId}
+            where: { id: listingId, ownerId: userId }
         })
 
         if (!listing) {
-            return res.status(404).json({message:"Listing not found or you are not the owner"})
+            return res.status(404).json({ message: "Listing not found or you are not the owner" })
         }
 
         await prisma.credential.create({
-            data:{
+            data: {
                 listingId,
                 originalCredential: credential
             }
         })
 
         await prisma.listing.update({
-            where: {id:listingId},
-            data: {isCredentialSubmitted: true}
+            where: { id: listingId },
+            data: { isCredentialSubmitted: true }
         })
 
-        return res.json({message: "Credential added successfully"})
+        return res.json({ message: "Credential added successfully" })
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({message: error.code || error.message})
-        
+        res.status(500).json({ message: error.code || error.message })
     }
 }
 
-
-export const markFeatured = async (req,res) =>{
+export const markFeatured = async (req, res) => {
     try {
-        const {id} = req.params;
-        const {userId} = await req.auth();
+        const { id } = req.params;
+        const { userId } = await req.auth();
 
         if (req.plan !== "premium") {
-            return res.status(400).json({message:"Premium plan required"})
+            return res.status(400).json({ message: "Premium plan required" })
         }
 
-        //Unset all other featured listings
+        // Unset all other featured listings
         await prisma.listing.updateMany({
-            where:{ownerId:userId},
-            data: {featured: false},
+            where: { ownerId: userId },
+            data: { featured: false },
         })
-        //mark the listing as featured
 
+        // mark the listing as featured
         await prisma.listing.update({
-            where:{id},
-            data: {featured:true}
+            where: { id },
+            data: { featured: true }
         })
 
-        return res.json({Message: "Listing marked as featured"})
+        return res.json({ message: "Listing marked as featured" })
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({message: error.code || error.message})
-        
+        res.status(500).json({ message: error.code || error.message })
     }
 }
 
-export const getAllUserOrders = async (req,res) =>{
+export const getAllUserOrders = async (req, res) => {
     try {
-        const {userId} = await req.auth();
+        const { userId } = await req.auth();
         let orders = await prisma.transaction.findMany({
-            where: {userId, isPaid: true},
-            include: {listing: true},
+            where: { userId, isPaid: true },
+            include: { listing: true },
         })
 
         if (!orders || orders.length === 0) {
-            return res.json({ orders: []});
+            return res.json({ orders: [] });
         }
 
-        // attach the credential to each other
-
+        // attach the credential to each order
         const credentials = await prisma.credential.findMany({
-            where: {listingId: {in: orders.map((order)=>order.listingId)}}
+            where: { listingId: { in: orders.map((order) => order.listingId) } }
         })
 
-        const ordersWithCredentials = orders.map((order)=>{
-            const credential = credentials.find((cred)=> cred.listingId === order.listingId)
-            return {...order, credential}
+        const ordersWithCredentials = orders.map((order) => {
+            const credential = credentials.find((cred) => cred.listingId === order.listingId)
+            return { ...order, credential }
         })
 
-        return res.json({orders: ordersWithCredentials});
+        return res.json({ orders: ordersWithCredentials });
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({message: error.code || error.message})
-        
+        res.status(500).json({ message: error.code || error.message })
     }
 }
 
-export const withdrawAmount = async (req, res) =>{
+export const withdrawAmount = async (req, res) => {
     try {
-        const {userId} = await req.auth()
-        const {amount,account}=req.body;
+        const { userId } = await req.auth()
+        const { amount, account } = req.body;
 
-        const user = await prisma.user.findUnique({where: {id: userId}})
+        const user = await prisma.user.findUnique({ where: { id: userId } })
+
+        // FIX: guard against null user
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
         const balance = user.earned - user.withdrawn
 
         if (amount > balance) {
-            return res.status(400).json({message: "Insufficient balance"})
-            
+            return res.status(400).json({ message: "Insufficient balance" })
         }
 
         const withdrawal = await prisma.withdrawal.create({
-            data:{
-                userId, amount, account
-            }
+            data: { userId, amount, account }
         })
 
         await prisma.user.update({
-            where:{id:userId},
-            data: {withdrawn: {increment: amount}}
-
+            where: { id: userId },
+            data: { withdrawn: { increment: amount } }
         })
 
-        return res.json ({message: "Applied for withdrawal", withdrawal});
+        return res.json({ message: "Applied for withdrawal", withdrawal });
 
     } catch (error) {
         console.log(error)
@@ -410,11 +389,6 @@ export const withdrawAmount = async (req, res) =>{
     }
 }
 
-export const purchaseAccount = async (req,res) =>{
-    
+export const purchaseAccount = async (req, res) => {
+
 }
-
-
-
-
-
