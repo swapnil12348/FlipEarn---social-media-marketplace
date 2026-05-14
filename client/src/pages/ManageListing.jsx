@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../configs/axios';
+import { getAllUserListings } from '../app/features/listingSlice';
 
 const ManageListing = () => {
 
@@ -95,6 +96,9 @@ const ManageListing = () => {
         const token = await getToken()
 
         const {data}= await api.put('/api/listing', formDataInstance, {headers: {Authorization: `Bearer ${token}` }})
+        toast.dismissAll()
+        toast.success(data.message)
+        dispatch(getAllUserListings({getToken}))
         
       }
     } catch (error) {
