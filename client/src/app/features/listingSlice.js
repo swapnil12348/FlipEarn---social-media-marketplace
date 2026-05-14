@@ -26,7 +26,7 @@ export const getAllUserListings = createAsyncThunk("listing/getAllUserListing", 
         
     } catch (error) {
         console.log(error)
-        return [];
+        return { listings: [], balance: { earned: 0, withdrawn: 0, available: 0 } }
         
     }
 })
