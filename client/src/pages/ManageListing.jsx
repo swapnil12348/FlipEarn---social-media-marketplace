@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import api from '../configs/axios';
 
 const ManageListing = () => {
 
@@ -89,7 +90,11 @@ const ManageListing = () => {
         const formDataInstance = new FormData()
         formDataInstance.append('accountDetails', JSON.stringify(dataCopy))
 
-        formData.images.filter((image) => typeof image !== 'string')
+        formData.images.filter((image) => typeof image !== 'string').forEach((image)=>{formDataInstance.append('images', image)})
+
+        const token = await getToken()
+
+        const {data}= await api.put('/api/listing', formDataInstance, {headers: {Authorization: `Bearer ${token}` }})
         
       }
     } catch (error) {
