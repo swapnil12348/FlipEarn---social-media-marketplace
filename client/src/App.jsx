@@ -35,7 +35,7 @@ const App = () => {
 
   useEffect(()=>{
     if (isLoaded && user) {
-      dispatch(getAllUserListings())
+      dispatch(getAllUserListings({getToken}))
       
     }
   }, [isLoaded, user])
@@ -60,12 +60,12 @@ const App = () => {
         <Route path='/my-orders' element={<MyOrders/>}/>
         <Route path='/loading' element={<Loading/>}/>
         <Route path='/admin' element={<Layout/>}>
-         <Route index element={<Dashboard/>}/>
-         <Route path='verify-credentials' element={<CredentialVerify/>}/>
-         <Route path='change-credentials' element={<CredentialChange/>}/>
-         <Route path='list-listings' element={<AllListings/>}/>
-         <Route path='transactions' element={<Transactions/>}/>
-         <Route path='withdrawal' element={<Withdrawal/>}/>
+        <Route index element={<Dashboard/>}/>
+        <Route path='verify-credentials' element={<CredentialVerify/>}/>
+        <Route path='change-credentials' element={<CredentialChange/>}/>
+        <Route path='list-listings' element={<AllListings/>}/>
+        <Route path='transactions' element={<Transactions/>}/>
+        <Route path='withdrawal' element={<Withdrawal/>}/>
 
         </Route>
 

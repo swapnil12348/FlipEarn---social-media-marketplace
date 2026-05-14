@@ -24,7 +24,7 @@ export const addListing = async (req, res) => {
         accountDetails.monthly_views = parseFloat(accountDetails.monthly_views)
         accountDetails.price = parseFloat(accountDetails.price)
         accountDetails.platform = accountDetails.platform.toLowerCase();
-        accountDetails.nice = accountDetails.platform.toLowerCase()
+        accountDetails.niche = accountDetails.niche.toLowerCase()
 
         accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
 
