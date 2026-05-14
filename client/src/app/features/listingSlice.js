@@ -18,10 +18,10 @@ export const getAllPublicListing = createAsyncThunk("listing/getAllPublicListing
 
 //Get all user listings
 
-export const getAllUserListings = createAsyncThunk("listing/getAllUserListing", async ({getToken}) =>{
+export const getAllUserListings = createAsyncThunk("listing/getAllUserListing", async (getToken) =>{
     try {
         const token = await getToken();
-        const {data} = await api.get('api/listing/user', {headers: {Authorization: `Bearer ${token}`}})
+        const {data} = await api.get('/api/listing/user', {headers: {Authorization: `Bearer ${token}`}})
         return data
         
     } catch (error) {

@@ -8,7 +8,7 @@ import CredentialSubmission from '../components/CredentialSubmission';
 import WithdrawModal from '../components/WithdrawModal';
 
 const MyListings = () => {
-  const { userListings, balance } = useSelector((state) => state.listing)
+  const { userListings = [], balance = { earned: 0, withdrawn: 0, available: 0 } } = useSelector((state) => state.listing)
   const currency = import.meta.env.VITE_CURRENCY || '$';
   const navigate = useNavigate()
 
