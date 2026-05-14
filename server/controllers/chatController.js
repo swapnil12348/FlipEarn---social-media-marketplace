@@ -1,6 +1,6 @@
 //Controller for getiing chat(creating if not exists)
 
-import prisma from "../configs/prisma";
+import prisma from "../configs/prisma.js";
 
 export const getChat = async (req, res)=>{
     try {

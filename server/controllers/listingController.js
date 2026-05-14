@@ -1,7 +1,7 @@
 // Controller for adding listing to database
 
-import imagekit from "../configs/imageKit";
-import prisma from "../configs/prisma";
+import imagekit from "../configs/imageKit.js";
+import prisma from "../configs/prisma.js";
 import fs from 'fs';
 
 export const addListing = async (req, res) => {
