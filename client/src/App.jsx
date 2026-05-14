@@ -18,6 +18,7 @@ import CredentialChange from './pages/admin/CredentialChange'
 import CredentialVerify from './pages/admin/CredentialVerify'
 import Transactions from './pages/admin/Transactions'
 import Withdrawal from './pages/admin/Withdrawal'
+import { useAuth, useUser } from '@clerk/clerk-react'
 
 const App = () => {
   const{pathname}=useLocation();
