@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../configs/axios';
-import { getAllUserListings } from '../app/features/listingSlice';
+import { getAllPublicListing, getAllUserListings } from '../app/features/listingSlice';
 
 const ManageListing = () => {
 
@@ -99,9 +99,30 @@ const ManageListing = () => {
         toast.dismissAll()
         toast.success(data.message)
         dispatch(getAllUserListings({getToken}))
+        dispatch(getAllPublicListing())
+        navigate('/my-listings')
         
+      }else{
+        delete dataCopy.images;
+
+        const formDataInstance = new FormData()
+        formDataInstance.append('accountDetails', JSON.stringify(dataCopy));
+        formData.images.forEach((image)=>{
+          formDataInstance.append('images', image)
+
+        })
+
+        const token = await getToken()
+        const {data} = await api.post('/api/listing', formDataInstance, {headers: {Authorization: `Bearer ${token}` }})
+        toast.dismissAll();
+        toast.success(data.message);
+        dispatch(getAllUserListings({getToken}))
+        dispatch(getAllPublicListing())
+        navigate('/my-listings')
       }
     } catch (error) {
+      toast.dismissAll();
+      toast.error(error?.response?.data?.message || error.message);
       
     }
 
