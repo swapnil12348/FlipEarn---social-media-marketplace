@@ -1,7 +1,8 @@
+import { useAuth } from '@clerk/clerk-react';
 import { Loader2Icon, Upload } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const ManageListing = () => {
@@ -9,6 +10,9 @@ const ManageListing = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { userListings, balance } = useSelector((state) => state.listing)
+
+  const {getToken} = useAuth()
+  const dispatch = useDispatch()
 
   const [loadingListing, setLoadingListing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -75,6 +79,22 @@ const ManageListing = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toast.loading('Saving...')
+    const dataCopy = structuredClone(formData)
+
+    try {
+      if (isEditing) {
+        dataCopy.images = formData.images.filter((image)=> typeof image === "string")
+
+        const formDataInstance = new FormData()
+        formDataInstance.append('accountDetails', JSON.stringify(dataCopy))
+
+        formData.images.filter((image) => typeof image !== 'string')
+        
+      }
+    } catch (error) {
+      
+    }
 
 
   };
