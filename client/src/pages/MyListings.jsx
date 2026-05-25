@@ -8,6 +8,7 @@ import CredentialSubmission from '../components/CredentialSubmission';
 import WithdrawModal from '../components/WithdrawModal';
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
+import { getAllPublicListing, getAllUserListing } from '../app/features/listingSlice';
 
 const MyListings = () => {
   const { userListings = [], balance = { earned: 0, withdrawn: 0, available: 0 } } = useSelector((state) => state.listing)
@@ -113,7 +114,7 @@ const MyListings = () => {
       toast.loading('featuring listing...')
       const token = await getToken();
       const {data} = await api.put(`/api/featured/${listingId}`, {}, {headers: {Authorization: `Bearer ${token}`}})
-      dispatch(getAll)
+      dispatch(getAllUserListing({getToken}))
     }
     
   }
