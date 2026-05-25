@@ -6,11 +6,13 @@ import StatCard from '../components/StatCard';
 import { platformIcons } from '../assets/assets';
 import CredentialSubmission from '../components/CredentialSubmission';
 import WithdrawModal from '../components/WithdrawModal';
+import { useAuth } from '@clerk/clerk-react';
 
 const MyListings = () => {
   const { userListings = [], balance = { earned: 0, withdrawn: 0, available: 0 } } = useSelector((state) => state.listing)
   const currency = import.meta.env.VITE_CURRENCY || '$';
   const navigate = useNavigate()
+  const {getToken} =  useAuth()
 
   const [showCredentialSubmission, setShowCredentialSubmission] = useState(null)
   const [showWithdrawal, setShowWithdrawal] = useState(null)
