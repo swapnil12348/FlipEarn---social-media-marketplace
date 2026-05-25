@@ -7,6 +7,7 @@ import { platformIcons } from '../assets/assets';
 import CredentialSubmission from '../components/CredentialSubmission';
 import WithdrawModal from '../components/WithdrawModal';
 import { useAuth } from '@clerk/clerk-react';
+import toast from 'react-hot-toast';
 
 const MyListings = () => {
   const { userListings = [], balance = { earned: 0, withdrawn: 0, available: 0 } } = useSelector((state) => state.listing)
@@ -71,6 +72,17 @@ const MyListings = () => {
   }
 
   const toggleStatus = async (listingId) => {
+    try{
+      toast.loading('Updating listing status...')
+      const token = await getToken();
+      const {data}= await api.put(`/api/listing/${listingId}/status`, {}, {headers:{Authorization: `Bearer ${token}`}})
+      dispatch
+
+    }catch(error){
+      toast.dismissAll();
+      toast.error(error?.response?.data?.message || error.message)
+
+    }
     
   }
 
