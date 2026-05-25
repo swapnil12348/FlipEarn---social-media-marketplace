@@ -85,6 +85,8 @@ export const getAllPublicListing = async (req, res) => {
 export const getAllUserListing = async (req, res) => {
     try {
         const { userId } = await req.auth();
+        console.log("Logged in userId:", userId); // ← add this
+        console.log("DB ownerId:", "user_3DiSJPEeDrGti05DP...") // compare manually
 
         // get all listings except deleted
         const listings = await prisma.listing.findMany({
