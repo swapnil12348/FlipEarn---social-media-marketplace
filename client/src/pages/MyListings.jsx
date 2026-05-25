@@ -92,12 +92,13 @@ const MyListings = () => {
   const deleteListing = async (listingId) => {
     try{
       const confirm = window.confirm('Are you sure you want to delete this listing? if credentials are changed, new credentials will be sent to your email');
-      
-      toast.loading('Updating listing status...')
+      if(!confirm) return;
+
+      toast.loading('Deleting listing...')
       const token = await getToken();
-      const {data} = await api.put(`/api/listing/${listingId}/status`, {}, {headers: {Authorization: `bearer ${token}`}})
+      const {data} = await api.delete(`/api/listing/${listingId}`, {headers: {Authorization: `bearer ${token}`}})
       dispatch(getAllUserListing({getToken}))
-      disptach(getAllPublicListing())
+      dispatch(getAllPublicListing())
       toast.dismissAll();
       toast.success(data.message)
     }catch{
@@ -108,6 +109,12 @@ const MyListings = () => {
   }
 
   const markAsFeatured = async (listingId) => {
+    try{
+      toast.loading('featuring listing...')
+      const token = await getToken();
+      const {data} = await api.put(`/api/featured/${listingId}`, {}, {headers: {Authorization: `Bearer ${token}`}})
+      dispatch(getAll)
+    }
     
   }
 
