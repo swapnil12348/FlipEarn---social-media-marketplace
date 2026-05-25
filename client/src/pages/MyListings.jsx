@@ -13,6 +13,7 @@ const MyListings = () => {
   const currency = import.meta.env.VITE_CURRENCY || '$';
   const navigate = useNavigate()
   const {getToken} =  useAuth()
+  const dispatch = useDis
 
   const [showCredentialSubmission, setShowCredentialSubmission] = useState(null)
   const [showWithdrawal, setShowWithdrawal] = useState(null)
