@@ -91,6 +91,7 @@ const MyListings = () => {
 
   const deleteListing = async (listingId) => {
     try{
+      const confirm = window.confirm()
       toast.loading('Updating listing status...')
       const token = await getToken();
       const {data} = await api.put(`/api/listing/${listingId}/status`, {}, {headers: {Authorization: `bearer ${token}`}})
