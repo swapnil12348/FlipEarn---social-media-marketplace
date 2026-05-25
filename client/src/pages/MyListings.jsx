@@ -90,6 +90,18 @@ const MyListings = () => {
   }
 
   const deleteListing = async (listingId) => {
+    try{
+      toast.loading('Updating listing status...')
+      const token = await getToken();
+      const {data} = await api.put(`/api/listing/${listingId}/status`, {}, {headers: {Authorization: `bearer ${token}`}})
+      dispatch(getAllUserListing({getToken}))
+      disptach(getAllPublicListing())
+      toast.dismissAll();
+      toast.success(data.message)
+    }catch{
+      toast.dismissAll();
+      toast.error(error?.response?.data?.message || error.message)
+    }
     
   }
 
