@@ -76,7 +76,10 @@ const MyListings = () => {
       toast.loading('Updating listing status...')
       const token = await getToken();
       const {data}= await api.put(`/api/listing/${listingId}/status`, {}, {headers:{Authorization: `Bearer ${token}`}})
-      dispatch
+      dispatch(getAllUserListing({getToken}))
+      dispatch(getAllPublicListing())
+      toast.dismissAll();
+      toast.success(data.message);
 
     }catch(error){
       toast.dismissAll();
