@@ -115,8 +115,14 @@ const MyListings = () => {
       const token = await getToken();
       const {data} = await api.put(`/api/featured/${listingId}`, {}, {headers: {Authorization: `Bearer ${token}`}})
       dispatch(getAllUserListing({getToken}))
+      dispatch(getAllPublicListing())
+      toast.dismissAll();
+      toast.success(data.message);
+      
+    }catch(error){
+      toast.dismissAll();
+      toast.error(error?.response?.data?.message || error.message);
     }
-    
   }
 
 
