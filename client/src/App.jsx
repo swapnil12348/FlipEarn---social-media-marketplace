@@ -20,7 +20,7 @@ import Transactions from './pages/admin/Transactions'
 import Withdrawal from './pages/admin/Withdrawal'
 import { useAuth, useUser } from '@clerk/clerk-react'
 import { useDispatch } from 'react-redux';
-import { getAllPublicListing, getAllUserListings } from './app/features/listingSlice';
+import { getAllPublicListing, getAllUserListing } from './app/features/listingSlice';
 
 const App = () => {
   const{pathname}=useLocation();
@@ -35,7 +35,7 @@ const App = () => {
 
   useEffect(()=>{
     if (isLoaded && user) {
-      dispatch(getAllUserListings(getToken))
+      dispatch(getAllUserListing(getToken))
       
     }
   }, [isLoaded, user])

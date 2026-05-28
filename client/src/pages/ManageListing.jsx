@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../configs/axios';
-import { getAllPublicListing, getAllUserListings } from '../app/features/listingSlice';
+import { getAllPublicListing, getAllUserListing } from '../app/features/listingSlice';
 
 const ManageListing = () => {
 
