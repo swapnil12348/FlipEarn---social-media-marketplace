@@ -35,7 +35,7 @@ const App = () => {
 
   useEffect(()=>{
     if (isLoaded && user) {
-      dispatch(getAllUserListing(getToken))
+      dispatch(getAllUserListing({getToken}))
       
     }
   }, [isLoaded, user])
