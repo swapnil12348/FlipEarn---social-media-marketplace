@@ -25,7 +25,20 @@ const CredentialSubmission = ({onClose, listing}) => {
     const handleSubmission = async (e) => {
         e.preventdefault();
         try {
-            
+            // check if there is atleast one field
+
+            if (credential.length===0) {
+                return toast.error("Please add at least one field")
+            }
+
+            for (const cred of credential) {
+                if (!cred.value) {
+                    return toast.error(`Please fill in the ${cred.name} field`);
+                    
+                }
+
+                
+            }
         } catch (error) {
             
         }
