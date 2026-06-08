@@ -3,6 +3,8 @@ import { CirclePlus, X } from 'lucide-react'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux';
+import api from '../configs/axios';
+import { getAllUserListing } from '../app/features/listingSlice';
 
 const CredentialSubmission = ({onClose, listing}) => {
 
@@ -36,10 +38,25 @@ const CredentialSubmission = ({onClose, listing}) => {
                     return toast.error(`Please fill in the ${cred.name} field`);
                     
                 }
-
-                
             }
+
+            const confirm = window.confirm("Credential will be verified & changed post submission. Are you sure you want to submit?");
+            if (!confirm) {
+                return;
+            }
+
+            const token = await getToken();
+            const {data} = await api.post('/api/listing/add-credential', {credential, listingId: listing.id}, {headers: {Authorization : `Bearer ${token}`}})
+            toast.success(data.message);
+            dispatch(getAllUserListing({getToken}))
+            onClose();
+
+
+
+
+
         } catch (error) {
+            toast.error(error?.response?.data?.message || error?.message)
             
         }
         
