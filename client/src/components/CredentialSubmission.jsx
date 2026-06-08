@@ -24,6 +24,11 @@ const CredentialSubmission = ({onClose, listing}) => {
 
     const handleSubmission = async (e) => {
         e.preventdefault();
+        try {
+            
+        } catch (error) {
+            
+        }
         
     }
 
