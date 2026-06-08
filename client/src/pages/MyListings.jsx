@@ -114,7 +114,7 @@ const MyListings = () => {
     try{
       toast.loading('featuring listing...')
       const token = await getToken();
-      const {data} = await api.put(`/api/featured/${listingId}`, {}, {headers: {Authorization: `Bearer ${token}`}})
+      const {data} = await api.put(`/api/listing/featured/${listingId}`, {}, {headers: {Authorization: `Bearer ${token}`}})
       dispatch(getAllUserListing({getToken}))
       dispatch(getAllPublicListing())
       toast.dismissAll();
