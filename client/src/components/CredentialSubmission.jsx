@@ -1,8 +1,12 @@
 import { CirclePlus, X } from 'lucide-react'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux';
 
 const CredentialSubmission = ({onClose, listing}) => {
+
+    const {getToken} = useAuth()
+    const dispatch = useDispatch()
 
     const [newField, setNewField]= useState("")
     const [credential, setCredential] = useState([
