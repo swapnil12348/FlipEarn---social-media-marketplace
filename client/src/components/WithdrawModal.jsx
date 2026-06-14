@@ -1,7 +1,16 @@
+import { useAuth } from '@clerk/clerk-react';
 import { X } from 'lucide-react';
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
 
 const WithdrawModal = ({ onClose }) => {
+
+    const {getToken} = useAuth()
+    const dispatch = useDispatch()
+
+
+
     const [amount, setAmount] = useState("")
     const [account, setAccount] = useState([
         { type: "text", name: "Account Holder Name", value: "" },
@@ -14,6 +23,15 @@ const WithdrawModal = ({ onClose }) => {
 
     const handleSubmission = async (e) => {
         e.preventDefault();
+        try {
+            //check if there is atleast one filed
+            if (account.length === 0) {
+                return toast.error("Please add at least one field")
+                
+            }
+        } catch (error) {
+            
+        }
     };
 
     return (
