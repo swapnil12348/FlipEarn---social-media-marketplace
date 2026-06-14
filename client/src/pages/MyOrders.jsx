@@ -37,8 +37,12 @@ const MyOrders   = () => {
   }
 
   useEffect(()=>{
-    fetchOrders()
-  }, [])
+    if (user && isLoaded) {
+      fetchOrders()
+      
+    }
+    
+  }, [isLoaded, user])
 
   const mask = (val, type) =>{
     if(!val && val !== 0 ) return "-";
