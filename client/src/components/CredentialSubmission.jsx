@@ -84,8 +84,8 @@ const CredentialSubmission = ({onClose, listing}) => {
                         <label className='text-sm font-medium text-gray-800'>
                             {cred.name}
                         </label>
-                        <input type="text" value={cred.value} onChange={(e)=>setCredential((prev)=>prev.map((c,i)=>(i+++ index ? {...c, vlaue: e.target.value}:c)))} className='w-full px-2 py-1.5 text-sm border border-gray-300 rounded outline-indigo-400' />
-                        <X className='w-5 h-5 text-gray-500 hover:text-gray-700 cursor-pointer' onClick={()=>setCredential((prev)=>prev.filter((_, i=> i !== index)))}/>
+                        <input type="text" value={cred.value} onChange={(e)=>setCredential((prev)=>prev.map((c,i)=>(i=== index ? {...c, value: e.target.value}:c)))} className='w-full px-2 py-1.5 text-sm border border-gray-300 rounded outline-indigo-400' />
+                        <X className='w-5 h-5 text-gray-500 hover:text-gray-700 cursor-pointer' onClick={()=>setCredential((prev)=>prev.filter((_, i)=> i !== index))}/>
 
                     </div>
                 ))}
