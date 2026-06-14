@@ -26,9 +26,22 @@ const WithdrawModal = ({ onClose }) => {
         try {
             //check if there is atleast one filed
             if (account.length === 0) {
-                return toast.error("Please add at least one field")
-                
+                return toast.error("Please add at least one field")   
             }
+
+            // check all fields are filled
+
+            for (const field of account){
+                if (!field.value) {
+                    return toast.error(`Please fill in the ${field.name} field`);
+                    
+                }
+            }
+
+            const confirm = window.confirm("Are you sure you want to submit?");
+            if (!confirm) return;
+
+
         } catch (error) {
             
         }
