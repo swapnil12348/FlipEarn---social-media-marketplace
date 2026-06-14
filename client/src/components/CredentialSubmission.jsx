@@ -25,7 +25,7 @@ const CredentialSubmission = ({onClose, listing}) => {
     }
 
     const handleSubmission = async (e) => {
-        e.preventdefault();
+        e.preventDefault();
         try {
             // check if there is atleast one field
 
