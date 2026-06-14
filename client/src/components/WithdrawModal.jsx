@@ -3,6 +3,8 @@ import { X } from 'lucide-react';
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
+import api from '../configs/axios';
+import { getAllUserListing } from '../app/features/listingSlice';
 
 const WithdrawModal = ({ onClose }) => {
 
@@ -40,6 +42,13 @@ const WithdrawModal = ({ onClose }) => {
 
             const confirm = window.confirm("Are you sure you want to submit?");
             if (!confirm) return;
+
+            const token = await getToken()
+            const { data } = await api.post('/api/listing/withdraw', {account, amount: parseInt(amount)},{headers: {Authorization: `Bearer ${token}`}})
+            toast.success(data.message)
+            dispatch(getAllUserListing({getToken}))
+            onClose();
+
 
 
         } catch (error) {
