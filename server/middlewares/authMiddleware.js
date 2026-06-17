@@ -40,4 +40,10 @@ export const protect = async (req, res, next) => {
 };
 
 
-export const protectAdmin = async (req, res,next)
+export const protectAdmin = async (req, res,next) =>{
+    try {
+        const {user} = await clerkClient.users.getUser(await req.auth())
+    } catch (error) {
+        
+    }
+}
