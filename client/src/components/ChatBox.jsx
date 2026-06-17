@@ -76,8 +76,14 @@ const ChatBox = () => {
       try {
         setIsSending(true);
         const token = await getToken()
-        const {data} = await api.post('/api/chat/send-message', {chatId: chat.id, message: newMessage})
+        const {data} = await api.post('/api/chat/send-message', {chatId: chat.id, message: newMessage}, {headers: { Authorization: `Bearer ${token}`}})
+        setMessages([...messages, data.newMessage])
+        setNewMessage("")
+        setIsSending(false)
       } catch (error) {
+        toast.error(error?.response?.data?.message)
+        console.log(error)
+        setIsSending(false)
         
       }
       
