@@ -4,13 +4,16 @@ import { dummyChats } from '../assets/assets';
 import { Loader2Icon, Send, X } from 'lucide-react';
 import { clearChat } from '../app/features/chatSlice';
 import { format } from 'date-fns';
+import { useAuth, useUser } from '@clerk/clerk-react';
+import api from '../configs/axios';
+import { toast } from 'react-hot-toast';
 
 const ChatBox = () => {
 
     const {listing, isOpen, chatId} = useSelector((state)=>state.chat)
     const dispatch = useDispatch();
-
-    const user = {id: 'user_2'};
+    const {getToken} = useAuth()
+    const {user} = useUser()
     
 
     const [chat, setChat] = useState(null);
@@ -20,15 +23,27 @@ const ChatBox = () => {
     const [isSending, setIsSending] = useState(false)
 
     const fetchChat = async () => {
-      setChat(dummyChats[0]);
-      setMessages(dummyChats[0].messages);
-      setIsLoading(false);
+      try {
+        const token = await getToken()
+        const {data}= await api.post('/api/chat', {listingId:listing.id,chatId}, {headers: {Authorization: `Bearer ${token}`}})
+        setChat(data?.chat)
+        setMessages(data?.chat?.messages || [])
+        setIsLoading(false)
+      } catch (error) {
+        toast.error(error?.response?.data?.message || error?.message);
+        console.log(error)
+        
+      }
       
     }
 
     useEffect(()=>{
       if (listing) {
         fetchChat();
+        const interval = setInterval(()=>{
+          fetchChat()
+        },3000)
+        return ()=> clearInterval(interval)
       }
 
     }, [listing])
@@ -58,8 +73,13 @@ const ChatBox = () => {
         return;
       }
 
-      setMessages([...messages, {id: Date.now(), chatId: chat.id, sender_id: user.id, message: newMessage, createdAt: new Date()}]);
-      setNewMessage("");
+      try {
+        setIsSending(true);
+        const token = await getToken()
+        const {data} = await api.post('/api/chat/send-message', {chatId: chat.id, message: newMessage})
+      } catch (error) {
+        
+      }
       
     }
 

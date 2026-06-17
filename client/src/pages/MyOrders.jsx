@@ -30,10 +30,6 @@ const MyOrders   = () => {
     }finally{
       setLoading(false)
     }
-
-
-    
-    
   }
 
   useEffect(()=>{
