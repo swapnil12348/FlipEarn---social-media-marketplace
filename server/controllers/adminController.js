@@ -2,6 +2,8 @@
 
 //Controller for checking if user is admin
 
+import prisma from "../configs/prisma.js";
+
 export const isAdmin = async (req,res) =>{
     try {
         return res.json({isAdmin: true})
@@ -10,4 +12,32 @@ export const isAdmin = async (req,res) =>{
         res.status(400).json({message: error.code || error.message})
         
     }
+}
+//contoller for getting dashboar data
+export const getDashboard = async (req,res) => {
+    try {
+        const totalListings = await prisma.listing.count({});
+        const transactions = await prisma.transaction.findMany({
+            where: {isPaid: true},
+            select: {amount: true},
+        })
+        const totalRevenue = transactions.reduce((total, transaction)=>total + transaction.amount, 0)
+
+        const activeListings = await prisma.listing.count({
+            where: {status: "active"}
+        })
+
+        const totalUser = await prisma.user.count({})
+        const recentListings = await prisma.listing.findMany({
+            orderBy: {createdAt: "desc"},
+            take: 5,
+            include: {owner:true},
+        })
+
+        return res.json({dashboardData: {totalListings, totalRevenue, activeListings, totalUser, recentListings}})
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({message: error.code || error.message})
+    }
+    
 }
