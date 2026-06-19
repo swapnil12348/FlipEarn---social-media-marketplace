@@ -69,7 +69,11 @@ export const changeStatus = async (req,res) => {
         try {
             const {listingId} = req.params
             const {status} = req.body
-            
+
+            const listing = await prisma.listing.findUnique({
+                where: {id: listingId},
+            })
+
         } catch (error) {
             console.log(error)
             res.status(400).json({message: error.code || error.message})
