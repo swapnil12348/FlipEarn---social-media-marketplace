@@ -52,12 +52,28 @@ export const getAllListings = async (req,res) => {
         })
 
         if (!listings || listings.length === 0) {
+            return res.json({ listings: []})
             
         }
+        return res.json({listings})
 
     } catch (error) {
         console.log(error)
+        res.status(400).json({message: error.code || error.message})
         
     }
     
 }
+
+export const changeStatus = async (req,res) => {
+        try {
+            const {listingId} = req.params
+            const {status} = req.body
+            
+        } catch (error) {
+            console.log(error)
+            res.status(400).json({message: error.code || error.message})
+            
+        }
+        
+    }
