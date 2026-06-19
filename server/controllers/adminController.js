@@ -48,9 +48,15 @@ export const getAllListings = async (req,res) => {
     try {
         const listings=await prisma.listing.findmany({
             include:{owner:true},
-            orderedBy:{createdAt:"desc"}
+            orderBy:{createdAt:"desc"}
         })
+
+        if (!listings || listings.length === 0) {
+            
+        }
+
     } catch (error) {
+        console.log(error)
         
     }
     
