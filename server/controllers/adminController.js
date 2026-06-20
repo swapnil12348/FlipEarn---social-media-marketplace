@@ -115,11 +115,71 @@ export const getAllUnverifiedListings = async (req,res)=>{
             return res.json ({ listings : []});
         }
         return res.json({listings});
-        
+
     } catch (error) {
         console.log(error)
         res.status(400).json({message: error.code || error.message})
     }
 
+}
 
+
+//controller for getting credential
+
+export const getCredential = async(req,res)=>{
+    try {
+        const {listingId}= req. params;
+        const credential = await prisma.credential.findFirst({
+            where: {listingId}
+        })
+
+        if (!credential) {
+            return res.status(404).json({message: "Credential not found"})
+        }
+
+        return res.json({credential})
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({message: error.code || error.message})
+    }
+}
+
+//mark credential as verified
+
+export const markCredentialverified = async(req,res)=>{
+    try {
+        const  {listingId}= req.params;
+        await prisma.listing.update({
+            where: {id: listingId},
+            data:{isCredentialVerified: true}
+        })
+
+        return res.json({message: "Credential marked as verified"})
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({message:error.code || error.message})
+    }
+}
+
+// get all unchanged listing
+
+export const getAllUnchangedlistings = async(req,res)=>{
+    try {
+        const listings = await prisma.listing.findmany({
+            where:{
+                isCredentialVerified: true,
+                isCredentialChanged: false,
+                status: {not: "deleted"}
+            },
+            orderby:{createdAt: "desc"}
+        })
+
+        if(!listings || listings.length === 0){
+            return res.json({listings: []})
+
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({message: error.code || error.message})
+    }
 }
