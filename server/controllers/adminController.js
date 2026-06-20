@@ -235,14 +235,33 @@ export const getAllTransactions = async(req,res)=>{
         })
 
         if (!transactions || transactions.length === 0) {
-            
-
+            return res.json({transactions: []})
             
         }
+
+        return res.json({ transactions})
 
 
     } catch (error) {
         console.log(error)
         res.status(400).json({message: error.code || error.message})
+    }
+}
+
+//Controller for getting all withdraw requests
+
+export const getAllWithdrawRequests = async(req,res)=>{
+    try {
+        const requests = await prisma.withdrawal.findmany({
+            orderBy: {createdAt: "asc"},
+            include:{user:true}
+        })
+
+        if (!requests || requests.length === 0) {
+            return req.json({})
+            
+        }
+    } catch (error) {
+        
     }
 }
