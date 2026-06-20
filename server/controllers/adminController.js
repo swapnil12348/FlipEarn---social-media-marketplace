@@ -76,6 +76,19 @@ export const changeStatus = async (req,res) => {
                 where: {id: listingId},
             })
 
+            if (!listing) {
+                return res.status(404).json({message: "listing not found"})
+                
+            }
+
+            await prisma.listing.update({
+                where: {id: listingId},
+                data: {status}
+
+            })
+
+            return res.json({ message: "Listing status updated "})
+
         } catch (error) {
             console.log(error)
             res.status(400).json({message: error.code || error.message})
