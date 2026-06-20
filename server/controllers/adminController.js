@@ -65,6 +65,8 @@ export const getAllListings = async (req,res) => {
     
 }
 
+//change listing status
+
 export const changeStatus = async (req,res) => {
         try {
             const {listingId} = req.params
