@@ -176,8 +176,71 @@ export const getAllUnchangedlistings = async(req,res)=>{
 
         if(!listings || listings.length === 0){
             return res.json({listings: []})
-
         }
+
+        return res.json({listings})
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({message: error.code || error.message})
+    }
+}
+
+//chegae credential for verified listing
+
+export const changeCredential = async(req,res)=>{
+    try {
+        const {listingId}= req.params;
+        const {newCredential, credentialId} = req.body;
+
+        await prisma.credential.update({
+            where: {id: credentialId, listingId},
+            data: {updatedcredential: newCredential}
+        })
+
+        await prisma.listing.update({
+            where: {id: listingId},
+            data: {isCredentialChanged: true}
+        })
+
+        return res.json({message: "Credential changed successfully"})
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({message: error.code || error.message})
+    }
+
+}
+
+//get all transactions
+
+export const getAllTransactions = async(req,res)=>{
+    try {
+        const transactions = await prisma.transaction.findmany({
+            where: {ispaid: true},
+            orderBy: {createdAt: "desc"},
+            include: {listing: {include: {owner: true}}}
+        })
+
+        //Get customer details for each transaction and add it to the transaction object
+
+        const customers = await prisma.user.findmany({
+            where: {id: {in: transactions.map((t)=>t.userId)}},
+            select: {id:true, email:true, name: true, image:true}
+        })
+
+        transactions.forEach ((t)=>{
+            const  customer = customers.find((c)=>c.id == t.userId)
+            t.listing.customer = {...customer}
+        })
+
+        if (!transactions || transactions.length === 0) {
+            
+
+            
+        }
+
+
     } catch (error) {
         console.log(error)
         res.status(400).json({message: error.code || error.message})
