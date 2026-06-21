@@ -4,13 +4,13 @@ import prisma from "../configs/prisma.js";
 
 export const protect = async (req, res, next) => {
     try {
+        // ✅ We put 'await req.auth()' back!
         const { userId, has } = await req.auth();
 
         if (!userId) {
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json({ message: "Unauthorized - No token provided" });
         }
 
-        // ✅ Safety net: if Inngest hasn't synced the user yet, do it now
         const existingUser = await prisma.user.findUnique({
             where: { id: userId }
         });
@@ -28,34 +28,40 @@ export const protect = async (req, res, next) => {
             });
         }
 
-        const hasPremiumPlan = await has({ plan: "premium" });
+        const hasPremiumPlan = has ? has({ plan: "premium" }) : false;
         req.plan = hasPremiumPlan ? "premium" : "free";
 
         return next();
 
     } catch (error) {
-        console.log(error);
-        res.status(401).json({ message: error.code || error.message });
+        console.error("🔥 Protect Middleware Crashed:", error);
+        res.status(401).json({ message: error.message });
     }
 };
 
-
-export const protectAdmin = async (req, res,next) =>{
+export const protectAdmin = async (req, res, next) => {
     try {
-        const {user} = await clerkClient.users.getUser(await req.auth().userId)
+        // ✅ We put 'await req.auth()' back!
+        const authData = await req.auth();
+        const userId = authData.userId;
 
-        const isAdmin = process.env.ADMIN_EMAILS.split(",").includes(user.emailAddresses[0].emailAddress)
-
-        if (!isAdmin) {
-            return res.status(401).json({ message: "Unauthorized"})
-            
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized - No token provided" });
         }
 
-        return next()
+        const user = await clerkClient.users.getUser(userId);
+
+        const adminEmailsEnv = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || ""; 
+        const isAdmin = adminEmailsEnv.split(",").includes(user.emailAddresses[0].emailAddress);
+
+        if (!isAdmin) {
+            return res.status(401).json({ message: "Unauthorized - You are not an admin" });
+        }
+
+        return next();
 
     } catch (error) {
-        console.log(error)
-        res.status(401).json({message:error.code|| error.message})
-        
+        console.error("🔥 ProtectAdmin Middleware Crashed:", error);
+        res.status(401).json({ message: error.message });
     }
-}
+};
