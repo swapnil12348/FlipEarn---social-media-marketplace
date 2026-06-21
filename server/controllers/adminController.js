@@ -46,7 +46,7 @@ export const getDashboard = async (req,res) => {
 
 export const getAllListings = async (req,res) => {
     try {
-        const listings=await prisma.listing.findmany({
+        const listings=await prisma.listing.findMany({
             include:{owner:true},
             orderBy:{createdAt:"desc"}
         })
@@ -165,13 +165,13 @@ export const markCredentialverified = async(req,res)=>{
 
 export const getAllUnchangedlistings = async(req,res)=>{
     try {
-        const listings = await prisma.listing.findmany({
+        const listings = await prisma.listing.findMany({
             where:{
                 isCredentialVerified: true,
                 isCredentialChanged: false,
                 status: {not: "deleted"}
             },
-            orderby:{createdAt: "desc"}
+            orderBy:{createdAt: "desc"}
         })
 
         if(!listings || listings.length === 0){
@@ -216,7 +216,7 @@ export const changeCredential = async(req,res)=>{
 
 export const getAllTransactions = async(req,res)=>{
     try {
-        const transactions = await prisma.transaction.findmany({
+        const transactions = await prisma.transaction.findMany({
             where: {ispaid: true},
             orderBy: {createdAt: "desc"},
             include: {listing: {include: {owner: true}}}
@@ -224,7 +224,7 @@ export const getAllTransactions = async(req,res)=>{
 
         //Get customer details for each transaction and add it to the transaction object
 
-        const customers = await prisma.user.findmany({
+        const customers = await prisma.user.findMany({
             where: {id: {in: transactions.map((t)=>t.userId)}},
             select: {id:true, email:true, name: true, image:true}
         })
@@ -252,7 +252,7 @@ export const getAllTransactions = async(req,res)=>{
 
 export const getAllWithdrawRequests = async(req,res)=>{
     try {
-        const requests = await prisma.withdrawal.findmany({
+        const requests = await prisma.withdrawal.findMany({
             orderBy: {createdAt: "asc"},
             include:{user: true}
         })
@@ -274,7 +274,7 @@ export const getAllWithdrawRequests = async(req,res)=>{
 export const markWithdrawalAsPaid= async (req,res) => {
     try {
         const {id} = req.params;
-        const withdrawal = await prisma.withdrawal.findUniqur({
+        const withdrawal = await prisma.withdrawal.findUnique({
             where: {id}
         })
 
