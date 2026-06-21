@@ -254,14 +254,50 @@ export const getAllWithdrawRequests = async(req,res)=>{
     try {
         const requests = await prisma.withdrawal.findmany({
             orderBy: {createdAt: "asc"},
-            include:{user:true}
+            include:{user: true}
         })
 
         if (!requests || requests.length === 0) {
-            return req.json({})
-            
+            return res.json({requests: []})
         }
+
+        return res.json({requests})
     } catch (error) {
+        console.log(error)
+        res.status(400).json({message: error.code || error.message})
         
     }
+}
+
+//controller for marking withdrawal as paid
+
+export const markWithdrawalAsPaid= async (req,res) => {
+    try {
+        const {id} = req.params;
+        const withdrawal = await prisma.withdrawal.findUniqur({
+            where: {id}
+        })
+
+        if (!withdrawal) {
+            return res.status(404).json({ message: "Withdrawal not found"})
+            
+        }
+
+        if (withdrawal.isWithdrawn) {
+            return res.status(400).json({message: "Withdrawal already marked as paid"})
+            
+        }
+
+        await prisma.withdrawal.update({
+            where:{id},
+            data: {isWithdrawn: true}
+
+        })
+
+        return res.json({message: "Withdrawal marked as paid"})
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ message: error.code || error.message})
+    }
+    
 }
