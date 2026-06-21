@@ -217,7 +217,7 @@ export const changeCredential = async(req,res)=>{
 export const getAllTransactions = async(req,res)=>{
     try {
         const transactions = await prisma.transaction.findMany({
-            where: {ispaid: true},
+            where: {isPaid: true},
             orderBy: {createdAt: "desc"},
             include: {listing: {include: {owner: true}}}
         })

@@ -30,9 +30,15 @@ const AllListings = () => {
         try {
             toast.loading('changing status...')
             const token = await getToken()
-            const {data} = await api.put(`/api/admin/change-status/${listing.id}`, {headers: {Authorization: `Bearer ${token}`}})
-            
+            const {data} = await api.put(`/api/admin/change-status/${listing.id}`,{status}, {headers: {Authorization: `Bearer ${token}`}})
+            await fetchAllListings()
+            toast.dismissAll()
+            toast.success(data.message)
+
         } catch (error) {
+            toast.dismissAll();
+            toast.error(error?.response?.data?.message || error.message)
+            console.log(error)
             
         }
     };
