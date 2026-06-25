@@ -26,7 +26,7 @@ const CredentialChangeModal = ({ listing, onClose }) => {
             const token = await getToken()
             const {data} = await api.get(`/api/admin/credential/${listing.id}`, {headers: {Authorization: `Bearer ${token}`}})
             setCredential(data.credential)
-            setNewCredential(data.credential.orignalCredential.map((cred)=>({...cred, value:''})))
+            setNewCredential(data.credential.originalCredential.map((cred)=>({...cred, value:''})))
             setLoading(false)
         } catch (error) {
             toast.error(error?.response?.data?.message || error.message)
@@ -40,7 +40,10 @@ const CredentialChangeModal = ({ listing, onClose }) => {
         try {
             const token = await getToken()
             const {data}= await api.put(`/api/admin/change-credential/${listing.id}` ,{newCredential, credentialId: credential.id}, {headers: {Authorization: `Bearer ${token}`}})
+            toast.success(data.message)
         } catch (error) {
+            toast.error(error?.response?.data?.message || error.message);
+            console.log(error);
             
         }
 
