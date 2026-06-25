@@ -419,7 +419,24 @@ export const purchaseAccount = async (req, res) => {
                 amount:listing.price
             }
         })
-        new Stripe
+        const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
+        const session = await stripeInstance.checkout.sessions.create({
+            success_url: '`${origin}/loading/my-orders',
+            cancel_url:`${origin}/marketplace`,
+            line_items:[
+                {
+                    price_data:{
+                        currency:"usd",
+                        product_data:{
+                            name: `Purchasing Account @${listing.username} of ${listing.platform}`
+                        },
+                        unit_amount: Math.floor(transaction.amount) * 100,
+                    },
+                    quantity: 1
+                }
+            ],
+            mode: 'payment'
+        });
     } catch (error) {
         
     }
