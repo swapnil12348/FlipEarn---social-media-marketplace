@@ -392,5 +392,34 @@ export const withdrawAmount = async (req, res) => {
 }
 
 export const purchaseAccount = async (req, res) => {
+    try {
+        const {userId} = await req.auth();
+        const {listingId}= req.headers;
+
+        const listing = await prisma.listing.findFirst({
+            where:{id: listingId, status: 'active'}
+        })
+
+        if (!listing) {
+            return res.status(404),json({message: "listing not found or not active"})
+            
+        }
+        if (listing.ownerId === userId) {
+            return res.status(400).json({message: "You cant purchase your own listing"})
+
+            
+        }
+
+        const transaction = await prisma.transaction.create({
+            data:{
+                listingId,
+                ownerId: listing.ownerId,
+                userId,
+                amount:listing.price
+            }
+        })
+    } catch (error) {
+        
+    }
 
 }
