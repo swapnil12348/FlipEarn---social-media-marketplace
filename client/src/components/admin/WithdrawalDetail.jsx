@@ -19,9 +19,10 @@ const WithdrawalDetail = ({ data, onClose }) => {
             const res = await api.put(`/api/admin/withdrawal-mark/${data.id}`, {},{headers: {Authorization: `Bearer ${token}`}})
             toast.dismissAll();
             toast.success(res.data.message)
+            onClose();
         } catch (error) {
+            toast.dismissAll()
             toast.error(error?.response?.data?.message || error.message)
-
             console.log(error)
             
         }
