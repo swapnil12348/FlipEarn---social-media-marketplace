@@ -3,6 +3,7 @@
 import imagekit from "../configs/imageKit.js";
 import prisma from "../configs/prisma.js";
 import fs from 'fs';
+import Stripe from'stripe'
 
 export const addListing = async (req, res) => {
     try {
@@ -418,6 +419,7 @@ export const purchaseAccount = async (req, res) => {
                 amount:listing.price
             }
         })
+        new Stripe
     } catch (error) {
         
     }
