@@ -20,7 +20,7 @@ const WithdrawalDetail = ({ data, onClose }) => {
             toast.dismissAll();
             toast.success(res.data.message)
         } catch (error) {
-            toast.errro(error?.response?.data?.message || error.message)
+            toast.error(error?.response?.data?.message || error.message)
 
             console.log(error)
             
