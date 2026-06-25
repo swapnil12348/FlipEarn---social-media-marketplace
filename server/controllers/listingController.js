@@ -435,9 +435,18 @@ export const purchaseAccount = async (req, res) => {
                     quantity: 1
                 }
             ],
-            mode: 'payment'
+            mode: 'payment',
+            metadata:{
+                transactionId: transaction.id,
+                appId: "flipearn",
+            },
+            expires_at: Math.floor(DataTransfer.Now()/1000)+30*60, //expires in 30 minutes
         });
+
+        return res.json({paymentLink: session.url})
     } catch (error) {
+        console.log(error)
+        res.status(500).json({message:error.code || error.message})
         
     }
 
