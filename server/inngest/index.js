@@ -1,5 +1,6 @@
 import { Inngest } from "inngest";
 import prisma from "../configs/prisma.js";
+import sendEmail from "../configs/nodemailer.js";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "profile-marketplace" });
@@ -92,6 +93,28 @@ const syncUserUpdation = inngest.createFunction(
     },
 );
     
+// inngest function to send purchase email to the customer
+
+const sendPurchaseEmail = inngest.createFunction(
+    {id: 'sned-purchase-email'},
+    {event: "app/purchase"},
+        async ({event}) => {
+            const {transaction}=event.data;
+
+            const customer = await prisma.user.findFirst({
+                where:{id: transaction.userId},
+            })
+
+            const listing = await prisma.listing.findFirst({
+                where:{id: transaction.listingId}
+            })
+
+            const credential = await prisma.credential.findFirst({
+                where:{listingId: transaction.listingId}
+            })   
+            await sendEmail
+    }
+)
 
 
 // Create an empty array where we'll export future Inngest functions
