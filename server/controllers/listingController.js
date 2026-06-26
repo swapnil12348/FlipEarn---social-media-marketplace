@@ -2,452 +2,462 @@
 
 import imagekit from "../configs/imageKit.js";
 import prisma from "../configs/prisma.js";
-import fs from 'fs';
-import Stripe from'stripe'
+import fs from "fs";
+import Stripe from "stripe";
 
 export const addListing = async (req, res) => {
-    try {
-        const { userId } = await req.auth();
-        if (req.plan !== "premium") {
-            const listingCount = await prisma.listing.count({
-                where: { ownerId: userId }
-            })
+  try {
+    const { userId } = await req.auth();
+    if (req.plan !== "premium") {
+      const listingCount = await prisma.listing.count({
+        where: { ownerId: userId },
+      });
 
-            if (listingCount >= 5) {
-                return res.status(400).json({ message: "you have reached the free listing limit" })
-            }
-        }
-
-        const accountDetails = JSON.parse(req.body.accountDetails)
-
-        accountDetails.followers_count = parseFloat(accountDetails.followers_count)
-        accountDetails.engagement_rate = parseFloat(accountDetails.engagement_rate)
-        accountDetails.monthly_views = parseFloat(accountDetails.monthly_views)
-        accountDetails.price = parseFloat(accountDetails.price)
-        accountDetails.platform = accountDetails.platform.toLowerCase();
-        accountDetails.niche = accountDetails.niche.toLowerCase()
-
-        accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
-
-        const uploadImages = req.files.map(async (file) => {
-            const response = await imagekit.files.upload({
-                file: fs.createReadStream(file.path),
-                fileName: `${Date.now()}.png`,
-                folder: "flip-earn",
-                transformation: { pre: "w-1280, h-auto" }
-            });
-
-            return response.url
-        })
-
-        // Wait for all uploads to complete
-        const images = await Promise.all(uploadImages)
-
-        const listing = await prisma.listing.create({
-            data: {
-                ownerId: userId,
-                images,
-                ...accountDetails
-            }
-        })
-
-        return res.status(201).json({ message: "account Listed successfully", listing })
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.code || error.message })
+      if (listingCount >= 5) {
+        return res
+          .status(400)
+          .json({ message: "you have reached the free listing limit" });
+      }
     }
-}
+
+    const accountDetails = JSON.parse(req.body.accountDetails);
+
+    accountDetails.followers_count = parseFloat(accountDetails.followers_count);
+    accountDetails.engagement_rate = parseFloat(accountDetails.engagement_rate);
+    accountDetails.monthly_views = parseFloat(accountDetails.monthly_views);
+    accountDetails.price = parseFloat(accountDetails.price);
+    accountDetails.platform = accountDetails.platform.toLowerCase();
+    accountDetails.niche = accountDetails.niche.toLowerCase();
+
+    accountDetails.username.startsWith("@")
+      ? (accountDetails.username = accountDetails.username.slice(1))
+      : null;
+
+    const uploadImages = req.files.map(async (file) => {
+      const response = await imagekit.files.upload({
+        file: fs.createReadStream(file.path),
+        fileName: `${Date.now()}.png`,
+        folder: "flip-earn",
+        transformation: { pre: "w-1280, h-auto" },
+      });
+
+      return response.url;
+    });
+
+    // Wait for all uploads to complete
+    const images = await Promise.all(uploadImages);
+
+    const listing = await prisma.listing.create({
+      data: {
+        ownerId: userId,
+        images,
+        ...accountDetails,
+      },
+    });
+
+    return res
+      .status(201)
+      .json({ message: "account Listed successfully", listing });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 // Controller for Getting All Public Listing
 
 export const getAllPublicListing = async (req, res) => {
-    try {
-        const listings = await prisma.listing.findMany({
-            where: { status: "active" },
-            include: { owner: true },
-            orderBy: { createdAt: "desc" },
-        })
+  try {
+    const listings = await prisma.listing.findMany({
+      where: { status: "active" },
+      include: { owner: true },
+      orderBy: { createdAt: "desc" },
+    });
 
-        if (!listings || listings.length === 0) {
-            return res.json({ listings: [] });
-        }
-
-        return res.json({ listings });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.code || error.message })
+    if (!listings || listings.length === 0) {
+      return res.json({ listings: [] });
     }
-}
+
+    return res.json({ listings });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 // Controller for getting all user listing
 
 export const getAllUserListing = async (req, res) => {
-    try {
-        const { userId } = await req.auth();
-        console.log("Logged in userId:", userId); // ← add this
-        console.log("DB ownerId:", "user_3DiSJPEeDrGti05DP...") // compare manually
+  try {
+    const { userId } = await req.auth();
+    console.log("Logged in userId:", userId); // ← add this
+    console.log("DB ownerId:", "user_3DiSJPEeDrGti05DP..."); // compare manually
 
-        // get all listings except deleted
-        const listings = await prisma.listing.findMany({
-            where: { ownerId: userId, status: { not: "deleted" } },
-            orderBy: { createdAt: "desc" }
-        })
+    // get all listings except deleted
+    const listings = await prisma.listing.findMany({
+      where: { ownerId: userId, status: { not: "deleted" } },
+      orderBy: { createdAt: "desc" },
+    });
 
-        const user = await prisma.user.findUnique({
-            where: { id: userId }
-        })
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
 
-        // FIX: guard against null user
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        const balance = {
-            earned: user.earned,
-            withdrawn: user.withdrawn,
-            available: user.earned - user.withdrawn
-        }
-
-        if (!listings || listings.length === 0) {
-            return res.json({ listings: [], balance });
-        }
-
-        return res.json({ listings, balance })
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.code || error.message })
+    // FIX: guard against null user
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-}
+
+    const balance = {
+      earned: user.earned,
+      withdrawn: user.withdrawn,
+      available: user.earned - user.withdrawn,
+    };
+
+    if (!listings || listings.length === 0) {
+      return res.json({ listings: [], balance });
+    }
+
+    return res.json({ listings, balance });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 // Controller for updating listing in database
 
 export const updateListing = async (req, res) => {
-    try {
-        const { userId } = await req.auth();
-        const accountDetails = JSON.parse(req.body.accountDetails)
+  try {
+    const { userId } = await req.auth();
+    const accountDetails = JSON.parse(req.body.accountDetails);
 
-        if (req.files.length + accountDetails.images.length > 5) {
-            return res.status(400).json({ message: "You can only upload up to 5 images" })
-        }
-
-        accountDetails.followers_count = parseFloat(accountDetails.followers_count)
-        accountDetails.engagement_rate = parseFloat(accountDetails.engagement_rate)
-        accountDetails.monthly_views = parseFloat(accountDetails.monthly_views)
-        accountDetails.price = parseFloat(accountDetails.price)
-        accountDetails.platform = accountDetails.platform.toLowerCase();
-        accountDetails.niche = accountDetails.niche.toLowerCase(); // FIX: was toLowercase()
-
-        accountDetails.username.startsWith("@") ? accountDetails.username = accountDetails.username.slice(1) : null
-
-        // FIX: check listing exists and validate status BEFORE updating
-        const existingListing = await prisma.listing.findUnique({
-            where: { id: accountDetails.id, ownerId: userId }
-        })
-
-        if (!existingListing) {
-            return res.status(404).json({ message: "Listing not found" });
-        }
-
-        if (existingListing.status === "sold") {
-            return res.status(400).json({ message: "You can't update a sold listing" });
-        }
-
-        if (req.files.length > 0) {
-            const uploadImages = req.files.map(async (file) => {
-                const response = await imagekit.files.upload({
-                    file: fs.createReadStream(file.path),
-                    fileName: `${Date.now()}.png`,
-                    folder: "flip-earn",
-                    transformation: { pre: "w-1280, h-auto" }
-                });
-                return response.url
-            })
-
-            // wait for all uploads to complete
-            const images = await Promise.all(uploadImages);
-
-            const listing = await prisma.listing.update({
-                where: { id: accountDetails.id, ownerId: userId },
-                data: {
-                    ownerId: userId,
-                    ...accountDetails,
-                    images: [...accountDetails.images, ...images]
-                }
-            })
-
-            return res.json({ message: "Account Updated successfully", listing })
-        }
-
-        const listing = await prisma.listing.update({
-            where: { id: accountDetails.id, ownerId: userId },
-            data: accountDetails
-        })
-
-        return res.json({ message: "Account Updated successfully", listing })
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.code || error.message })
+    if (req.files.length + accountDetails.images.length > 5) {
+      return res
+        .status(400)
+        .json({ message: "You can only upload up to 5 images" });
     }
-}
+
+    accountDetails.followers_count = parseFloat(accountDetails.followers_count);
+    accountDetails.engagement_rate = parseFloat(accountDetails.engagement_rate);
+    accountDetails.monthly_views = parseFloat(accountDetails.monthly_views);
+    accountDetails.price = parseFloat(accountDetails.price);
+    accountDetails.platform = accountDetails.platform.toLowerCase();
+    accountDetails.niche = accountDetails.niche.toLowerCase(); // FIX: was toLowercase()
+
+    accountDetails.username.startsWith("@")
+      ? (accountDetails.username = accountDetails.username.slice(1))
+      : null;
+
+    // FIX: check listing exists and validate status BEFORE updating
+    const existingListing = await prisma.listing.findUnique({
+      where: { id: accountDetails.id, ownerId: userId },
+    });
+
+    if (!existingListing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    if (existingListing.status === "sold") {
+      return res
+        .status(400)
+        .json({ message: "You can't update a sold listing" });
+    }
+
+    if (req.files.length > 0) {
+      const uploadImages = req.files.map(async (file) => {
+        const response = await imagekit.files.upload({
+          file: fs.createReadStream(file.path),
+          fileName: `${Date.now()}.png`,
+          folder: "flip-earn",
+          transformation: { pre: "w-1280, h-auto" },
+        });
+        return response.url;
+      });
+
+      // wait for all uploads to complete
+      const images = await Promise.all(uploadImages);
+
+      const listing = await prisma.listing.update({
+        where: { id: accountDetails.id, ownerId: userId },
+        data: {
+          ownerId: userId,
+          ...accountDetails,
+          images: [...accountDetails.images, ...images],
+        },
+      });
+
+      return res.json({ message: "Account Updated successfully", listing });
+    }
+
+    const listing = await prisma.listing.update({
+      where: { id: accountDetails.id, ownerId: userId },
+      data: accountDetails,
+    });
+
+    return res.json({ message: "Account Updated successfully", listing });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 export const toggleStatus = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { userId } = await req.auth();
+  try {
+    const { id } = req.params;
+    const { userId } = await req.auth();
 
-        const listing = await prisma.listing.findUnique({
-            where: { id, ownerId: userId },
-        })
+    const listing = await prisma.listing.findUnique({
+      where: { id, ownerId: userId },
+    });
 
-        if (!listing) {
-            return res.status(404).json({ message: "Listing not found" });
-        }
-
-        if (listing.status === "active" || listing.status === "inactive") {
-            await prisma.listing.update({
-                where: { id, ownerId: userId },
-                data: { status: listing.status === "active" ? "inactive" : "active" }
-            })
-        } else if (listing.status === "ban") {
-            return res.status(400).json({ message: "Your listing is banned" });
-        } else if (listing.status === "sold") {
-            return res.status(400).json({ message: "Your listing is sold" })
-        }
-
-        return res.json({ message: "Listing status updated successfully", listing });
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: error.code || error.message })
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
     }
-}
+
+    if (listing.status === "active" || listing.status === "inactive") {
+      await prisma.listing.update({
+        where: { id, ownerId: userId },
+        data: { status: listing.status === "active" ? "inactive" : "active" },
+      });
+    } else if (listing.status === "ban") {
+      return res.status(400).json({ message: "Your listing is banned" });
+    } else if (listing.status === "sold") {
+      return res.status(400).json({ message: "Your listing is sold" });
+    }
+
+    return res.json({
+      message: "Listing status updated successfully",
+      listing,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 export const deleteUserListing = async (req, res) => {
-    try {
-        const { userId } = await req.auth();
-        const { listingId } = req.params;
+  try {
+    const { userId } = await req.auth();
+    const { listingId } = req.params;
 
-        const listing = await prisma.listing.findFirst({
-            where: { id: listingId, ownerId: userId },
-            include: { owner: true }
-        })
+    const listing = await prisma.listing.findFirst({
+      where: { id: listingId, ownerId: userId },
+      include: { owner: true },
+    });
 
-        if (!listing) {
-            return res.status(404).json({ message: "Listing not found" })
-        }
-
-        if (listing.status === "sold") {
-            return res.status(400).json({ message: "sold listing can't be deleted" })
-        }
-
-        // if password has been changed, send the new password to the owner
-        if (listing.isCredentialChanged) {
-            // send email to owner
-        }
-
-        await prisma.listing.update({
-            where: { id: listingId },
-            data: { status: "deleted" }
-        })
-
-        return res.json({ message: "Listing deleted successfully" })
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: error.code || error.message })
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
     }
-}
+
+    if (listing.status === "sold") {
+      return res.status(400).json({ message: "sold listing can't be deleted" });
+    }
+
+    // if password has been changed, send the new password to the owner
+    if (listing.isCredentialChanged) {
+      // send email to owner
+    }
+
+    await prisma.listing.update({
+      where: { id: listingId },
+      data: { status: "deleted" },
+    });
+
+    return res.json({ message: "Listing deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 export const addCredential = async (req, res) => {
-    try {
-        const { userId } = await req.auth();
-        const { listingId, credential } = req.body;
+  try {
+    const { userId } = await req.auth();
+    const { listingId, credential } = req.body;
 
-        if (credential.length === 0 || !listingId) {
-            return res.status(400).json({ message: "Missing Fields" })
-        }
-
-        const listing = await prisma.listing.findFirst({
-            where: { id: listingId, ownerId: userId }
-        })
-
-        if (!listing) {
-            return res.status(404).json({ message: "Listing not found or you are not the owner" })
-        }
-
-        await prisma.credential.create({
-            data: {
-                listingId,
-                originalCredential: credential
-            }
-        })
-
-        await prisma.listing.update({
-            where: { id: listingId },
-            data: { isCredentialSubmitted: true }
-        })
-
-        return res.json({ message: "Credential added successfully" })
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: error.code || error.message })
+    if (credential.length === 0 || !listingId) {
+      return res.status(400).json({ message: "Missing Fields" });
     }
-}
+
+    const listing = await prisma.listing.findFirst({
+      where: { id: listingId, ownerId: userId },
+    });
+
+    if (!listing) {
+      return res
+        .status(404)
+        .json({ message: "Listing not found or you are not the owner" });
+    }
+
+    await prisma.credential.create({
+      data: {
+        listingId,
+        originalCredential: credential,
+      },
+    });
+
+    await prisma.listing.update({
+      where: { id: listingId },
+      data: { isCredentialSubmitted: true },
+    });
+
+    return res.json({ message: "Credential added successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 export const markFeatured = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { userId } = await req.auth();
+  try {
+    const { id } = req.params;
+    const { userId } = await req.auth();
 
-        if (req.plan !== "premium") {
-            return res.status(400).json({ message: "Premium plan required" })
-        }
-
-        // Unset all other featured listings
-        await prisma.listing.updateMany({
-            where: { ownerId: userId },
-            data: { featured: false },
-        })
-
-        // mark the listing as featured
-        await prisma.listing.update({
-            where: { id },
-            data: { featured: true }
-        })
-
-        return res.json({ message: "Listing marked as featured" })
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: error.code || error.message })
+    if (req.plan !== "premium") {
+      return res.status(400).json({ message: "Premium plan required" });
     }
-}
+
+    // Unset all other featured listings
+    await prisma.listing.updateMany({
+      where: { ownerId: userId },
+      data: { featured: false },
+    });
+
+    // mark the listing as featured
+    await prisma.listing.update({
+      where: { id },
+      data: { featured: true },
+    });
+
+    return res.json({ message: "Listing marked as featured" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 export const getAllUserOrders = async (req, res) => {
-    try {
-        const { userId } = await req.auth();
-        let orders = await prisma.transaction.findMany({
-            where: { userId, isPaid: true },
-            include: { listing: true },
-        })
+  try {
+    const { userId } = await req.auth();
+    let orders = await prisma.transaction.findMany({
+      where: { userId, isPaid: true },
+      include: { listing: true },
+    });
 
-        if (!orders || orders.length === 0) {
-            return res.json({ orders: [] });
-        }
-
-        // attach the credential to each order
-        const credentials = await prisma.credential.findMany({
-            where: { listingId: { in: orders.map((order) => order.listingId) } }
-        })
-
-        const ordersWithCredentials = orders.map((order) => {
-            const credential = credentials.find((cred) => cred.listingId === order.listingId)
-            return { ...order, credential }
-        })
-
-        return res.json({ orders: ordersWithCredentials });
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: error.code || error.message })
+    if (!orders || orders.length === 0) {
+      return res.json({ orders: [] });
     }
-}
+
+    // attach the credential to each order
+    const credentials = await prisma.credential.findMany({
+      where: { listingId: { in: orders.map((order) => order.listingId) } },
+    });
+
+    const ordersWithCredentials = orders.map((order) => {
+      const credential = credentials.find(
+        (cred) => cred.listingId === order.listingId,
+      );
+      return { ...order, credential };
+    });
+
+    return res.json({ orders: ordersWithCredentials });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 export const withdrawAmount = async (req, res) => {
-    try {
-        const { userId } = await req.auth()
-        const { amount, account } = req.body;
+  try {
+    const { userId } = await req.auth();
+    const { amount, account } = req.body;
 
-        const user = await prisma.user.findUnique({ where: { id: userId } })
+    const user = await prisma.user.findUnique({ where: { id: userId } });
 
-        // FIX: guard against null user
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        const balance = user.earned - user.withdrawn
-
-        if (amount > balance) {
-            return res.status(400).json({ message: "Insufficient balance" })
-        }
-
-        const withdrawal = await prisma.withdrawal.create({
-            data: { userId, amount, account }
-        })
-
-        await prisma.user.update({
-            where: { id: userId },
-            data: { withdrawn: { increment: amount } }
-        })
-
-        return res.json({ message: "Applied for withdrawal", withdrawal });
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: error.code || error.message });
+    // FIX: guard against null user
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-}
+
+    const balance = user.earned - user.withdrawn;
+
+    if (amount > balance) {
+      return res.status(400).json({ message: "Insufficient balance" });
+    }
+
+    const withdrawal = await prisma.withdrawal.create({
+      data: { userId, amount, account },
+    });
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { withdrawn: { increment: amount } },
+    });
+
+    return res.json({ message: "Applied for withdrawal", withdrawal });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
 
 export const purchaseAccount = async (req, res) => {
-    try {
-        const {userId} = await req.auth();
-        const {listingId}= req.headers;
+  try {
+    const origin = req.headers.origin || req.headers.referer || 'http://localhost:5173';
+    const { userId } = await req.auth();
+    const { listingId } = req.params;
 
-        const listing = await prisma.listing.findFirst({
-            where:{id: listingId, status: 'active'}
-        })
+    const listing = await prisma.listing.findFirst({
+      where: { id: listingId, status: "active" },
+    });
 
-        if (!listing) {
-            return res.status(404),json({message: "listing not found or not active"})
-            
-        }
-        if (listing.ownerId === userId) {
-            return res.status(400).json({message: "You cant purchase your own listing"})
-
-            
-        }
-
-        const transaction = await prisma.transaction.create({
-            data:{
-                listingId,
-                ownerId: listing.ownerId,
-                userId,
-                amount:listing.price
-            }
-        })
-        const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
-        const session = await stripeInstance.checkout.sessions.create({
-            success_url: '`${origin}/loading/my-orders',
-            cancel_url:`${origin}/marketplace`,
-            line_items:[
-                {
-                    price_data:{
-                        currency:"usd",
-                        product_data:{
-                            name: `Purchasing Account @${listing.username} of ${listing.platform}`
-                        },
-                        unit_amount: Math.floor(transaction.amount) * 100,
-                    },
-                    quantity: 1
-                }
-            ],
-            mode: 'payment',
-            metadata:{
-                transactionId: transaction.id,
-                appId: "flipearn",
-            },
-            expires_at: Math.floor(DataTransfer.Now()/1000)+30*60, //expires in 30 minutes
-        });
-
-        return res.json({paymentLink: session.url})
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({message:error.code || error.message})
-        
+    if (!listing) {
+      return (
+        res.status(404).json({ message: "listing not found or not active" })
+      );
+    }
+    if (listing.ownerId === userId) {
+      return res
+        .status(400)
+        .json({ message: "You cant purchase your own listing" });
     }
 
-}
+    const transaction = await prisma.transaction.create({
+      data: {
+        listingId,
+        ownerId: listing.ownerId,
+        userId,
+        amount: listing.price,
+      },
+    });
+    const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const session = await stripeInstance.checkout.sessions.create({
+      success_url: `${origin}/loading/my-orders`,
+      cancel_url: `${origin}/marketplace`,
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `Purchasing Account @${listing.username} of ${listing.platform}`,
+            },
+            unit_amount: Math.floor(transaction.amount) * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      metadata: {
+        transactionId: transaction.id,
+        appId: "flipearn",
+      },
+      expires_at: Math.floor(Date.now() / 1000) + 30 * 60, //expires in 30 minutes
+    });
+
+    return res.json({ paymentLink: session.url });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.code || error.message });
+  }
+};
