@@ -112,7 +112,13 @@ const sendPurchaseEmail = inngest.createFunction(
             const credential = await prisma.credential.findFirst({
                 where:{listingId: transaction.listingId}
             })   
-            await sendEmail
+            await sendEmail({
+                to:customer.email,
+                subject:"Your credentials for the account you purchased",
+                html: `
+                <h2>Thank you for purchasig account @${listing.username} of ${listing.platform} platform</h2>
+                `
+            })
     }
 )
 
