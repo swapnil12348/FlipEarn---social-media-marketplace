@@ -3,7 +3,7 @@
 import imagekit from "../configs/imageKit.js";
 import prisma from "../configs/prisma.js";
 import fs from "fs";
-import Stripe from "stripe";
+import Stripe from 'stripe';
 import { inngest } from "../inngest/index.js";
 
 export const addListing = async (req, res) => {

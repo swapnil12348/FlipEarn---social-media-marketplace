@@ -1,11 +1,11 @@
 import { err } from 'inngest/types';
-import Stripe from 'stripe'
+import stripe from 'stripe'
 import prisma from '../configs/prisma.js';
 import { inngest } from '../inngest/index.js';
 
 
 export const stripeWebhook = async (request, response) => {
-    const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
+    const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY)
     const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
     let event;
     if (endpointSecret) {
@@ -27,7 +27,7 @@ export const stripeWebhook = async (request, response) => {
 
         try {
             switch (event.type) {
-                case 'payment_intent.amount_capturable_updated.succeeded':
+                case 'payment_intent.succeeded':
                     const paymentIntent = event.data.object;
                     const sessionlist = await stripeInstance.checkout.sessions.list({
                         payment_intent: paymentIntent.id
