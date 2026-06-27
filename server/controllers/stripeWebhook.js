@@ -32,7 +32,7 @@ export const stripeWebhook = async (request, response) => {
                     const sessionlist = await stripeInstance.checkout.sessions.list({
                         payment_intent: paymentIntent.id
                     })
-                    const session = sessionlist.data(0)
+                    const session = sessionlist.data[0]
                     const {transactionId, appId}=session.metadata;
                     if (appId==='flipearn' && transactionId) {
                         const transaction = await prisma.transaction.update({
