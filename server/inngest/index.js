@@ -96,7 +96,7 @@ const syncUserUpdation = inngest.createFunction(
 // inngest function to send purchase email to the customer
 
 const sendPurchaseEmail = inngest.createFunction(
-    {id: 'sned-purchase-email'},
+    {id: 'send-purchase-email'},
     {event: "app/purchase"},
         async ({event}) => {
             const {transaction}=event.data;
