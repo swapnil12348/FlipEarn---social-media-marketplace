@@ -408,9 +408,10 @@ export const withdrawAmount = async (req, res) => {
 
 export const purchaseAccount = async (req, res) => {
   try {
-    const origin = req.headers.origin || req.headers.referer || 'http://localhost:5173';
+    
     const { userId } = await req.auth();
     const { listingId } = req.params;
+    const {origin} = req.headers;
 
     const listing = await prisma.listing.findFirst({
       where: { id: listingId, status: "active" },
