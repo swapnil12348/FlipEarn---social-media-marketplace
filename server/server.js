@@ -38,10 +38,11 @@ app.use((req, res, next) => {
 app.use(clerkMiddleware());
 
 app.get("/", (req, res)=> res.send("Server is live!"));
+app.use(express.json());
 
 app.use("/api/inngest", serve({client: inngest, functions}));
 
-app.use(express.json());
+
 app.use("/api/listing", listingRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/admin", adminRouter);
