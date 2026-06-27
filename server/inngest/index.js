@@ -117,6 +117,12 @@ const sendPurchaseEmail = inngest.createFunction(
                 subject:"Your credentials for the account you purchased",
                 html: `
                 <h2>Thank you for purchasig account @${listing.username} of ${listing.platform} platform</h2>
+                <p>Here are your credentials for the listing you purchased.</p>
+                <h3>New Credential</h3>
+                <div>
+                ${credential.updatedCredential.map((cred)=>`<p>${cred.name}: ${cred.value}</p>`).join("")}
+                </div>
+                <p>If you have any questions, please contact us at <a href="mailto:support@example.com">support@example.com</a></p>
                 `
             })
     }
