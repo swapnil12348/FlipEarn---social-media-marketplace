@@ -98,7 +98,7 @@ const MyListings = () => {
 
       toast.loading('Deleting listing...')
       const token = await getToken();
-      const {data} = await api.delete(`/api/listing/${listingId}`, {headers: {Authorization: `bearer ${token}`}})
+      const {data} = await api.delete(`/api/listing/${listingId}`, {headers: {Authorization: `Bearer ${token}`}})
       dispatch(getAllUserListing({getToken}))
       dispatch(getAllPublicListing())
       toast.dismissAll();
