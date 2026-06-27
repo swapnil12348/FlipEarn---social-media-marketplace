@@ -103,7 +103,7 @@ const MyListings = () => {
       dispatch(getAllPublicListing())
       toast.dismissAll();
       toast.success(data.message)
-    }catch{
+    }catch(error){
       toast.dismissAll();
       toast.error(error?.response?.data?.message || error.message)
     }
