@@ -1,7 +1,7 @@
 import { err } from 'inngest/types';
 import stripe from 'stripe'
 import prisma from '../configs/prisma.js';
-import { inngest } from '../inngest';
+import { inngest } from '../inngest/index.js';
 
 
 export const stripeWebhook = async (request, response) => {
@@ -20,7 +20,7 @@ export const stripeWebhook = async (request, response) => {
             );
             
         } catch (error) {
-            console.log(`Webhook signature verification failed`, err.message);
+            console.log(`Webhook signature verification failed`, error.message);
             return response.sendStatus(400);
             
         }
@@ -35,7 +35,7 @@ export const stripeWebhook = async (request, response) => {
                     const session = sessionlist.data(0)
                     const {transactionId, appId}=session.metadata;
                     if (appId==='flipearn' && transactionId) {
-                        const transaction = await prismatransaction.update({
+                        const transaction = await prisma.transaction.update({
                             where:{id: transactionId},
                             data: {isPaid: true}
 
