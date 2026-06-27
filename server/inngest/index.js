@@ -128,10 +128,50 @@ const sendPurchaseEmail = inngest.createFunction(
     }
 )
 
+//inngest function to send new credential for deleted listing
+
+const sendNewCredentials = inngest.createFunction(
+    {id: 'send-new-credential'},
+    {event: 'app/listing-deleted'},
+    async ({event})=>{
+        const {listing, listingId}= event.data;
+        const newCredential = await prisma.credential.findFirst({
+            where:{listingId},
+        })
+        if (newCredential) {
+            await sendEmail({
+                to:listing.owner.email,
+                subject: "New Credentials for your deleted listing",
+                html: `
+                <h2> Your new credentials for your deleted listing:</h2>
+                title: ${listing.title}
+                <br/>
+                username: ${listing.username}
+                <br/>
+                platform: ${listing.platform}
+                <br/>
+                <h3>New Credential</h3>
+                <div>
+                ${newCredential.updatedCredential.map((cred)=>`<p>${cred.name}:${cred.value}</p>`).join("")}
+                </div>
+                <h3>Old Credentials</h3>
+                <div>
+                ${newCredential.orignalCredential.map((cred)=>`<p>${cred.name}:${cred.value}</p>`).join("")}
+                </div>
+                <p>If you have any questions, please contact us at <a href="mailto:support@example.com">support@example.com</a></p>
+                `
+            })
+            
+        }
+    }
+)
+
 
 // Create an empty array where we'll export future Inngest functions
 export const functions = [
     syncUserCreation,
     syncUserDeletion,
     syncUserUpdation,
+    sendPurchaseEmail,
+    sendNewCredentials,
 ];

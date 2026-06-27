@@ -1,6 +1,7 @@
 import { err } from 'inngest/types';
 import stripe from 'stripe'
 import prisma from '../configs/prisma.js';
+import { inngest } from '../inngest';
 
 
 export const stripeWebhook = async (request, response) => {
@@ -40,6 +41,10 @@ export const stripeWebhook = async (request, response) => {
 
                         })
                         //send new credentials to the buyer using the email address
+                        await inngest.send({
+                            name:"app/purchase",
+                            data: {transaction}
+                        })
 
                         // mark the listing as sold
 
