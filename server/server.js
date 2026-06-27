@@ -15,9 +15,12 @@ app.use('/api/stripe', express.raw({type: 'application/json'}), stripeWebhook)
 
 // ✅ FIX: Configure CORS to explicitly allow the Authorization header
 app.use(cors({
-    origin: "http://localhost:5173", // Make sure this matches your React/Vite URL exactly!
+    origin: [
+        "http://localhost:5173", 
+        "https://flip-earn-kappa.vercel.app" // <- Add your deployed Vercel frontend URL here
+    ], 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'], // 👈 This is required for Clerk
+    allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true
 }));
 
