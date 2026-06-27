@@ -1,11 +1,11 @@
 import { err } from 'inngest/types';
-import stripe from 'stripe'
+import Stripe from 'stripe'
 import prisma from '../configs/prisma.js';
 import { inngest } from '../inngest/index.js';
 
 
 export const stripeWebhook = async (request, response) => {
-    const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY)
+    const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
     const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
     let event;
     if (endpointSecret) {
